@@ -1,0 +1,75 @@
+package ua.nure.filonitch.practice3;
+
+public class Part5 {
+
+	public static void main(String[] args) {
+
+		System.out.println(decimal2Roman(18));
+		System.out.println(roman2Decimal("XVII"));
+	}
+
+	public static String decimal2Roman(int aNumber) {
+		// TODO Auto-generated method stub
+		String[] RomanSymbols = { "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
+		int[] ArabicSymbols = { 100, 90, 50, 40, 10, 9, 5, 4, 1 };
+		String numeric_el = "";
+		int Depth;
+		int index_num = 0;
+		while (index_num < ArabicSymbols.length) {
+			Depth = (int) aNumber / ArabicSymbols[index_num];
+			for (int k = 0; k < Depth; k++) {
+				numeric_el += RomanSymbols[index_num];
+			}
+			aNumber -= Depth * ArabicSymbols[index_num];
+			index_num++;
+		}
+		return numeric_el;
+	}
+
+	public static int roman2Decimal(java.lang.String romanNumber) {
+		// TODO Auto-generated method stub
+		int dec = 0;
+		int lastNum = 0;
+		String romanNum = romanNumber.toUpperCase();
+		for (int m = romanNum.length() - 1; m >= 0; m--) {
+			char convertToDecimal = romanNum.charAt(m);
+
+			switch (convertToDecimal) {
+			case 'I':
+				dec = ProcessOfDecimal(1, lastNum, dec);
+				lastNum = 1;
+				break;
+
+			case 'V':
+				dec = ProcessOfDecimal(5, lastNum, dec);
+				lastNum = 5;
+				break;
+
+			case 'X':
+				dec = ProcessOfDecimal(10, lastNum, dec);
+				lastNum = 10;
+				break;
+
+			case 'L':
+				dec = ProcessOfDecimal(50, lastNum, dec);
+				lastNum = 50;
+				break;
+
+			case 'C':
+				dec = ProcessOfDecimal(100, lastNum, dec);
+				lastNum = 100;
+				break;
+			}
+		}
+		return dec;
+	}
+
+	public static int ProcessOfDecimal(int dec, int lastNum, int lastDec) {
+		// TODO Auto-generated method stub
+		if (lastNum > dec) {
+			return lastDec - dec;
+		} else {
+			return lastDec + dec;
+		}
+	}
+}

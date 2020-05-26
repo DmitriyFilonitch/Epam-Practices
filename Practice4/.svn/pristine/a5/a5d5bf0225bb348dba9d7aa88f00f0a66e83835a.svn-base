@@ -1,0 +1,85 @@
+package ua.nure.filonitch.practice4;
+
+import java.io.ByteArrayOutputStream;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Part1 {
+	public static final String FILE_NAME = "part1.txt";
+	private static final String ENCODING = "UTF-8";
+
+	public static void main(String[] args) {
+		List<String> strings = null;
+		try {
+			strings = Files.readAllLines(new File(FILE_NAME).toPath(), Charset.forName(ENCODING));
+		} catch (IOException exe1) {
+			// TODO Auto-generated catch block
+			exe1.printStackTrace();
+		}
+		// TODO Auto-generated catch block
+
+		ByteArrayOutputStream output = new ByteArrayOutputStream(119);
+		PrintStream printOutData = System.out;
+		try {
+			System.setOut(new PrintStream(output, true, Charset.defaultCharset().name()));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		input(strings, System.out);
+		String actualData = new String(output.toByteArray(), Charset.forName(Part1.ENCODING));
+		System.setOut(printOutData);
+		System.out.print(actualData);
+	}
+
+	public static void input(Iterable<?> list, OutputStream out) {
+		StringBuffer strBuf = new StringBuffer();
+		for (Object ob : list) {
+			strBuf.append(ob).append(System.lineSeparator());
+		}
+		String regex = "([A-Za-z\\u0410-\\u044F\\u0401\\u0451"
+				+ "\\u0406\\u0407\\u0456\\u0457])([a-z\\u0430-\\u044F\\u0401"
+				+ "\\u0451\\u0406\\u0407\\u0456\\u0457]+)";
+		Matcher match = Pattern
+				.compile(regex, Pattern.MULTILINE | Pattern.UNICODE_CHARACTER_CLASS | Pattern.CASE_INSENSITIVE)
+				.matcher(strBuf);
+		strBuf = new StringBuffer();
+		while (match.find()) {
+			if (match.group().length() > 3) {
+				int chr = match.group(1).charAt(0);
+				if ((chr < 97 && chr > 40) || (chr < 1072 && chr > 1039)) {
+					match.appendReplacement(strBuf, match.group(1).toLowerCase());
+					strBuf.append(match.group(2).toUpperCase());
+				} else {
+					if ((chr < 122 && chr > 96) || (chr < 1104 && chr > 1071)) {
+						match.appendReplacement(strBuf, match.group(1).toUpperCase());
+						strBuf.append(match.group(2).toUpperCase());
+					}
+				}
+			}
+		}
+		match.appendTail(strBuf);
+		try {
+			out.write(strBuf.toString().getBytes(ENCODING));
+		} catch (IOException exe) {
+			// TODO Auto-generated catch block
+			exe.printStackTrace();
+		}
+
+	}
+}
+
+/*
+ * private static String reverse(String word) { // TODO Auto-generated method
+ * stub StringBuilder builder = new StringBuilder(); String sb =
+ * builder.append(word).reverse().toString(); builder = null; return sb; }
+ */

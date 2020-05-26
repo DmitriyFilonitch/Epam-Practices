@@ -1,0 +1,256 @@
+package ua.nure.filonitch.practice6.part2;
+import java.util.*;
+
+public class Part2 {
+
+    private static int n;
+    private static int k;
+
+	public static void main(String[] args) {
+
+		long start, end;
+
+		n = 10000;
+        k = 4;
+        if (k<0 && k>n)
+            return;
+
+        ArrayList<Object> arrayList = new ArrayList<>();
+        LinkedList<Object> linkedList = new LinkedList<>();
+
+        // adding objects to lists
+        intit(arrayList, linkedList);
+
+        start = System.nanoTime();
+        processIndexed(arrayList);
+        end = System.nanoTime();
+        System.out.printf("Indexed. ArrayList. %.2f %n", (end-start)*Math.pow(10, -9) );
+
+        start = System.nanoTime();
+        processIndexed(linkedList);
+        end = System.nanoTime();
+        System.out.printf("Indexed. LinkedList. %.2f %n", (end-start)*Math.pow(10, -9) );
+
+
+        arrayList.clear();
+        linkedList.clear();
+        intit(arrayList, linkedList);
+        System.out.println();
+
+
+        start = System.nanoTime();
+        processIterable(arrayList);
+        end = System.nanoTime();
+        System.out.printf("Iterable. ArrayList. %.2f %n", (end-start)*Math.pow(10, -9) );
+
+        start = System.nanoTime();
+        processIterable(linkedList);
+        end = System.nanoTime();
+        System.out.printf("Iterable. LinkedList. %.2f %n", (end-start)*Math.pow(10, -9) );
+
+//        List<Object> list = new ArrayList<>();
+//        for(int i=0; i<10; ++i)
+//            list.add(i);
+//        System.out.println(list);
+//        processIterable(list);
+
+	}
+
+	private static void intit(ArrayList<Object> arrayList, LinkedList<Object> linkedList){
+        for(int i=0; i<n; ++i) {
+            arrayList.add(new Object());
+            linkedList.add(new Object());
+        }
+    }
+
+	private static void processIndexed(List<Object> list){
+	    int carriage = 0;
+        while (list.size() != 1){
+            carriage += (k-1);
+            carriage %= list.size();
+
+            list.remove(carriage);
+        }
+    }
+
+    private static void processIterable(List<Object> list){
+        Iterator  it = list.iterator();
+        while (list.size() != 1){
+
+            for (int i=0; i<k; ++i) {
+                if (!it.hasNext())
+                    it = list.iterator();
+
+                it.next();
+            }
+
+            it.remove();
+        }
+    }
+}
+
+/*import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+
+public class Part2 {
+
+    public final int lengthList;
+
+    public Part2(int lengthList) {
+        this.lengthList = lengthList;
+    }
+
+    public static long removeByIndex(List<Integer> l, int k) {
+    	 long t = System.currentTimeMillis();
+         l.set(0, safePosition(l.size(), k));
+         int m = l.size() - 1;
+         while(l.size() != 1) {
+        	 l.remove(m);
+        	 m--;
+         }
+         return System.currentTimeMillis() - t;
+     }
+
+    public static long removeByIterator(List<Integer> l, int m) {
+        long t = System.currentTimeMillis();
+        removeByStep(m, l);
+        return System.currentTimeMillis() - t;
+    }
+
+    public static List<Integer> removeByStep(int m, List<Integer> l) {
+        int k = 0;
+        int c = 0;
+        while(l.size() != 1) {
+        	 ListIterator<Integer> iterator = l.listIterator();
+        while (iterator.hasNext()) {
+        	if(c != 0 && m != 1) {
+        		k = c % m;
+        		iterator.next();
+                if (k == 0) {
+                    iterator.remove();
+                }
+        	}
+        	if(l.size() == 1) {
+    			break;
+    		}else if(m == 1) {
+        		iterator.next();
+        		iterator.remove();
+        	}
+        	c++;
+        }
+        }
+        return l;
+    }
+
+    public List<Integer> getkillArray() {
+    	List<Integer> kArray = new ArrayList<>();
+        for (int k = 0; k < lengthList; k++) {
+        	kArray.add(k);
+        }
+        return kArray;
+    }
+
+    public List<Integer> getkillLink() {
+    	List<Integer> kLink = new LinkedList<>();
+        for (int k = 0; k < lengthList; k++) {
+        	kLink.add(k);
+        }
+        return kLink;
+    }
+    
+    
+    public static int safePosition(int q, int l) {
+        int m = 0;
+        for (int i = 0; i < q; ++i) {
+            m = (m + l) % (i + 1);
+        }
+        return m;
+    }
+    
+    public static void main(String[] args) {
+        Part2 part = new Part2(17);
+        int i = 1;
+        
+        System.out.println(removeByIndex(part.getkillLink(), i));
+        System.out.println(removeByIndex(part.getkillArray(), i));
+        
+        System.out.println(removeByIterator(part.getkillLink(), i));
+        System.out.println(removeByIterator(part.getkillArray(), i));
+        
+    }
+
+}*/
+/************************************************/
+/*import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.LinkedList;
+
+public class Part2 {
+	private static final int N = 10_000;
+	public int num;
+
+	public static void main(String[] args) {
+		Part2 part2 = new Part2(N);
+		System.out.println("ArrayList#Iterator : " + part2.removeByIterator(part2.list, 4) + " ms");
+		System.out.println("LinkedList#Iterator : " + part2.removeByIterator(part2.list2, 4) + " ms");
+	}
+
+	public final int getNumber() {
+		return num;
+	}
+
+	public final void setNumber(int number) {
+		this.num = number;
+	}
+
+	Part2(int number) {
+		setNumber(number);
+		list = new ArrayList<Integer>();
+		list2 = new LinkedList<Integer>();
+		fillCollection();
+	}
+
+	List<Integer> list;
+	List<Integer> list2;
+
+	public final void fillCollection() {
+		for (int k = 0; k < getNumber(); k++) {
+			list.add(k);
+			list2.add(k);
+		}
+	}
+
+	public long removeByIterator(List<Integer> list, int k) {
+		long time = System.currentTimeMillis();
+		remove(k, list);
+		return System.currentTimeMillis() - time;
+	}
+
+	public static List<Integer> remove(int k, List<Integer> list) {
+		int i = 0;
+		int counter = 0;
+		while (list.size() != 1) {
+			ListIterator<Integer> iterator = list.listIterator();
+			while (iterator.hasNext()) {
+				if (counter != 0 && k != 1) {
+					i = counter % k;
+					iterator.next();
+					if (i == 0) {
+						iterator.remove();
+					}
+				}
+				if (list.size() == 1) {
+					break;
+				} else if (k == 1) {
+					iterator.next();
+					iterator.remove();
+				}
+				counter++;
+			}
+		}
+		return list;
+	}
+}*/

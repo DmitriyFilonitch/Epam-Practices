@@ -1,0 +1,74 @@
+
+package ua.nure.filonitch.practice3;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Part2 {
+	public static final String FILENAME = "part2.txt";
+
+	public static void main(String[] args) {
+		String input = Util.readFile(FILENAME);
+		System.out.println(convert(input));
+	}
+
+	public static String convert(String input) {
+		// TODO Auto-generated method stub
+		StringBuilder strbuild = new StringBuilder();
+		String regex = "\\w+";
+		Pattern patt = Pattern.compile(regex);
+		Matcher match = patt.matcher(input);
+		while (match.find()) {
+			strbuild.append(match.group() + " ");
+		}
+
+		return minimal_element(strbuild.toString());
+	}
+
+	public static String minimal_element(String string) {
+		// TODO Auto-generated method stub
+		int min = 100, max = 0, k = 0;
+		StringBuilder str = new StringBuilder();
+		StringBuilder str1 = new StringBuilder();
+		String minimal = "Minimal: ";
+		String maximal = "Maxaximal: ";
+		str.append(minimal);
+		str1.append(maximal);
+		String[] Array = new String[string.length()];
+		String regex = "\\w+";
+		Pattern patt = Pattern.compile(regex);
+		Matcher match = patt.matcher(string);
+		while (match.find()) {
+			Array[k] = match.group();
+			if (Array[k].length() < min) {
+				min = Array[k].length();
+			} else if (Array[k].length() > max) {
+				max = Array[k].length();
+			}
+			k++;
+		}
+		delete_element(Array);
+		for (int j = 0; j < Array.length; j++) {
+			if (Array[j] != null && Array[j].length() == min) {
+				str.append(" " + Array[j] + ",");
+			} else if (Array[j] != null && Array[j].length() == max) {
+				str1.append(" " + Array[j] + ",");
+			}
+		}
+		return str.toString().substring(0, str.length() - 1) + System.lineSeparator()
+				+ str1.toString().substring(0, str1.length() - 1);
+	}
+
+	public static String[] delete_element(String[] Array) {
+		// TODO Auto-generated method stub
+		for (int x = 0; x < Array.length - 1; x++) {
+			for (int y = x + 1; y < Array.length; y++) {
+				if (Array[x] != null && Array[x].equals(Array[y])) {
+					Array[y] = null;
+				}
+			}
+		}
+
+		return Array;
+	}
+}

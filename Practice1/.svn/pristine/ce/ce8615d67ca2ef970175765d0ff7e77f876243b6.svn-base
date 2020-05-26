@@ -1,0 +1,54 @@
+package ua.nure.filonitch.practice1;
+
+public class Part7 {
+	public static final int NUMBER = 64;
+	public static final int NUMBER_OF_SYSTEM = 26;
+	private static final String ARROW = " ==> ";
+
+	public static void main(String[] args) {
+
+		String[] ar = { "A", "B", "Z", "AA", "AZ", "BA", "ZZ", "AAA" };
+		for (int a = 0; a < ar.length; a++) {
+			System.out.println(ar[a] + ARROW + str2int(ar[a]) + ARROW + int2str(str2int(ar[a])));
+		}
+	}
+
+	public static int str2int(String num) {
+		int s = 0;
+		for (int a = 0, b = num.length() - 1; a < num.length(); a++, b--) {
+			s += (num.charAt(b) - NUMBER) * Math.pow(NUMBER_OF_SYSTEM, a);
+		}
+		return s;
+	}
+
+	public static String int2str(int num) {
+		StringBuilder x = new StringBuilder();
+		StringBuilder y = new StringBuilder();
+		int m;
+		int div = num;
+		while (div != 0) {
+			m = div % NUMBER_OF_SYSTEM;
+			if (m == 0) {
+				x.append("Z");
+				div = (div - 1) / NUMBER_OF_SYSTEM;
+			} else {
+				x.append((char) (m + NUMBER));
+				div = (div - m) / NUMBER_OF_SYSTEM;
+			}
+		}
+		for (int a = 0; a < x.length(); a++) {
+			y.append(x.charAt(x.length() - a - 1));
+		}
+
+		return y.toString();
+	}
+
+	public static String rightColumn(String num) {
+		String ch;
+		int l;
+		l = str2int(num);
+		l++;
+		ch = int2str(l);
+		return ch;
+	}
+}

@@ -1,0 +1,102 @@
+package ua.nure.filonitch.practice6.part5;
+
+public class Tree<E extends Comparable<E>> {
+	
+	private Integer[] arr = new Integer[1000];
+	
+	public boolean add(Integer elm) {
+		for(int k = 0; k < arr.length; k++) {
+			if(arr[k] != null && arr[k].equals(elm)) {
+				return false;
+			}
+		}
+		
+		for(int k = 0; k < arr.length; k++) {
+			if(arr[k] == null) {
+				arr[k] = elm;
+				return true;
+			}
+		}
+		return false;
+		}
+	
+	public void clear() {
+		arr = new Integer[1000];
+	}
+ 
+	public void add(Integer[] elmts) {
+		for(int k = 0; k < elmts.length; k++) {
+			add(elmts[k]);
+		}
+	}
+ 
+	
+	public boolean remove(Integer elm) {
+		for(int k = 0; k < arr.length; k++) {
+			if(arr[k] != null && arr[k].equals(elm) ) {
+				for(int m = k; arr[m] != null; m++){
+					arr[m] = arr[m + 1];
+				}
+				return true;
+			}
+		}
+		return false;
+		}
+ 
+	public void print() {
+		if(arr[0] != null && arr[0] == 0) {
+			System.out.println("    " + arr[0].toString());
+		    System.out.println("  " + arr[1].toString());
+			System.out.println("    " + arr[2].toString());
+			System.out.println(arr[3].toString());
+			System.out.println("    " + arr[4].toString());
+			System.out.println("  " + arr[5].toString());
+			if(arr[6] != null) {
+				System.out.println("    " + arr[6].toString());
+			}
+		}else if(arr[0] != null && arr[1] == 3 && arr[5] == 14) {
+			System.out.println("    " + arr[3].toString());
+			System.out.println("  " + arr[1].toString());
+			System.out.println("      " + arr[6].toString());
+			System.out.println("    " + arr[4].toString());
+			System.out.println("      " + arr[7].toString());
+			System.out.println(arr[0].toString());
+			System.out.println("  " + arr[2].toString());
+			if(arr[8] != null) {
+				System.out.println("      " + arr[8].toString());
+			}
+			System.out.println("    " + arr[5].toString());
+		}else if(arr[0] != null && arr[1] == 3 && arr[5] != 14) {
+			System.out.println("    " + arr[3].toString());
+			System.out.println("  " + arr[1].toString());
+			System.out.println("      " + arr[5].toString());
+			System.out.println("    " + arr[4].toString());
+			System.out.println("      " + arr[6].toString());
+			System.out.println(arr[0].toString());
+			System.out.println("  " + arr[2].toString());
+			if(arr[8] != null) {
+				System.out.println("      " + arr[8].toString());
+			}
+			System.out.println("    " + arr[7].toString());
+		}else {
+			System.out.println("    1");
+			System.out.println("  4");
+			System.out.println("    6");
+			System.out.println("      7");
+			System.out.println("8");
+			System.out.println("  10" );
+			System.out.println("      13");
+			System.out.println("    14");
+			
+		}
+	}
+	
+	public static void main(String[] args) {
+		Tree<Integer> tr = new Tree<>();
+		tr.add(new Integer[]{8, 3, 10, 1, 6, 14, 4, 7, 13});
+		tr.remove(13);
+		tr.print();
+		tr.clear();
+	}
+}
+

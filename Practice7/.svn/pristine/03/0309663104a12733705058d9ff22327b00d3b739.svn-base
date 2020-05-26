@@ -1,0 +1,198 @@
+package ua.nure.filonitch.practice7.controller;
+
+import java.io.IOException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+import ua.nure.filonitch.practice7.constants.Constants;
+import ua.nure.filonitch.practice7.constants.XML;
+import ua.nure.filonitch.practice7.entity.Card;
+import ua.nure.filonitch.practice7.entity.Cards;
+
+/**
+ * Controller for SAX parser.
+ * 
+ * @author D.Kolesnikov
+ * 
+ */
+public class SAXController extends DefaultHandler {
+
+	private String xmlFileName;
+
+	// current element name holder
+	private String currentElement;
+
+	// main container
+	private Cards cards;
+
+	private Card card;
+
+	// private Answer answer;
+
+	public SAXController(String xmlFileName) {
+		this.xmlFileName = xmlFileName;
+	}
+
+	/**
+	 * Parses XML document.
+	 * 
+	 * @param validate If true validate XML document against its XML schema. With
+	 *                 this parameter it is possible make parser validating.
+	 */
+	public void parse(boolean validate) throws ParserConfigurationException, SAXException, IOException {
+
+		// obtain sax parser factory
+		SAXParserFactory factory = SAXParserFactory.newInstance();
+
+		// XML document contains namespaces
+		factory.setNamespaceAware(true);
+
+		// set validation
+		if (validate) {
+			factory.setFeature(Constants.FEATURE_TURN_VALIDATION_ON, true);
+			factory.setFeature(Constants.FEATURE_TURN_SCHEMA_VALIDATION_ON, true);
+		}
+
+		SAXParser parser = factory.newSAXParser();
+		parser.parse(xmlFileName, this);
+	}
+
+	// ///////////////////////////////////////////////////////////
+	// ERROR HANDLER IMPLEMENTATION
+	// ///////////////////////////////////////////////////////////
+
+	@Override
+	public void error(org.xml.sax.SAXParseException e) throws SAXException {
+		// if XML document not valid just throw exception
+		throw e;
+	}
+
+	public Cards getCards() {
+		return cards;
+	}
+
+	// ///////////////////////////////////////////////////////////
+	// CONTENT HANDLER IMPLEMENTATION
+	// ///////////////////////////////////////////////////////////
+
+	@Override
+	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+
+		currentElement = localName;
+
+		if (XML.CARDS.equalsTo(currentElement)) {
+			cards = new Cards();
+			return;
+		}
+
+		if (XML.CARD.equalsTo(currentElement)) {
+			card = new Card();
+			return;
+		}
+	}
+
+	@Override
+	public void characters(char[] ch, int start, int length) throws SAXException {
+
+		String elementText = new String(ch, start, length).trim();
+
+		// return if content is empty
+		if (elementText.isEmpty()) {
+			return;
+		}
+
+		if (XML.THEMA.equalsTo(currentElement)) {
+			card.setThema(elementText);
+			return;
+		}
+		if (XML.COUNTRY.equalsTo(currentElement)) {
+			card.setCountry(elementText);
+			return;
+		}
+		if (XML.YEAR.equalsTo(currentElement)) {
+			card.setYear(elementText);
+			return;
+		}
+
+		if (XML.AUTHOR.equalsTo(currentElement)) {
+			card.setAuthor(elementText);
+			return;
+		}
+
+		if (XML.VALUABLE.equalsTo(currentElement)) {
+			card.setValuable(elementText);
+			return;
+		}
+
+		if (XML.TYPE.equalsTo(currentElement)) {
+			card.setType(elementText);
+			return;
+		}
+
+		if (XML.TYPEOFCARD.equalsTo(currentElement)) {
+			card.setTypeofcard(elementText);
+			return;
+		}
+
+		if (XML.ISBEINGSENT.equalsTo(currentElement)) {
+			card.setIsbeingsent(elementText);
+			return;
+		}
+
+		/*
+		 * if (XML.TIME_CONSTRAINTS.equalsTo(currentElement)) {
+		 * bank.setTimeConstraints(elementText); return; }
+		 */
+	}
+
+	@Override
+	public void endElement(String uri, String localName, String qName) throws SAXException {
+
+		if (XML.CARD.equalsTo(localName)) {
+			// just add question to container
+			cards.getName().add(card);
+			return;
+		}
+	}
+
+	public static void main(String[] args) throws Exception {
+
+		// try to parse valid XML file (success)
+		SAXController saxContr = new SAXController(Constants.VALID_XML_FILE);
+
+		// do parse with validation on (success)
+		saxContr.parse(true);
+
+		// obtain container
+		Cards test = saxContr.getCards();
+
+		// we have Test object at this point:
+		System.out.println("====================================");
+		System.out.print("Here is the test: \n" + test);
+		System.out.println("====================================");
+
+		// now try to parse NOT valid XML (failed)
+		saxContr = new SAXController(Constants.INVALID_XML_FILE);
+		try {
+			// do parse with validation on (failed)
+			saxContr.parse(true);
+		} catch (Exception ex) {
+			System.err.println("====================================");
+			System.err.println("Validation is failed:\n" + ex.getMessage());
+			System.err.println("Try to print test object:" + saxContr.getCards());
+			System.err.println("====================================");
+		}
+
+		// and now try to parse NOT valid XML with validation off (success)
+		saxContr.parse(false);
+
+		// we have Test object at this point:
+		System.out.println("====================================");
+		System.out.print("Here is the test: \n" + saxContr.getCards());
+		System.out.println("====================================");
+	}
+}

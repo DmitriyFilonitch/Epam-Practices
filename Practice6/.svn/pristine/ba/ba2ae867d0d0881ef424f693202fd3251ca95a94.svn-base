@@ -1,0 +1,79 @@
+package ua.nure.filonitch.practice6.part3;
+
+import java.util.LinkedList;
+import java.util.List;
+
+public class Parking {
+
+	private List<Integer> autoPark;
+    private int countAuto;
+	
+	Parking(int countAuto){
+		this.countAuto = countAuto;
+		autoPark = new LinkedList<>();
+		for (int i = 0; i < countAuto; i++) {
+			autoPark.add(0);
+        }
+	}
+	
+	public void statusParking(){
+		autoPark = new LinkedList<>();
+		for (int i = 0; i < countAuto; i++) {
+			autoPark.add(0);
+        }
+	}
+	
+	public void print() {
+		for(int i = 0; i < countAuto; i++) {
+			System.out.print(autoPark.get(i));
+		}
+		System.out.println();
+	}
+	
+	boolean arrive(int k) {
+		if(k >= countAuto) {
+			throw new IllegalArgumentException();
+		}
+		int m = k;
+		for(int i = 0; i < countAuto * 10; i++) {
+		if(m == countAuto) {
+			m = 0;
+		}
+		if(autoPark.get(m) != 1) {
+			autoPark.set(m, 1);
+			return true;
+		}
+		m++;
+		if(m == k) {
+			break;
+		}
+		}
+		return false;
+	}
+    
+	
+	boolean depart(int k) {
+		if(k >= countAuto) {
+			throw new IllegalArgumentException();
+		}else if(autoPark.get(k) == 1) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static void main(String[] args) {
+		Parking parking = new Parking(10);
+		parking.statusParking();
+		parking.print();
+		parking.arrive(1);
+		parking.arrive(2);
+		parking.print();
+		parking.arrive(1);
+		parking.print();
+		parking.arrive(1);
+		parking.print();
+		System.out.println(parking.depart(1));
+		System.out.println(parking.depart(6));
+	}
+	
+}

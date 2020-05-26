@@ -1,0 +1,85 @@
+package ua.nure.filonitch.practice5;
+
+public class Part3 {
+	private int counter;
+	private int counter2;
+	private int n;
+	private int k;
+	private int t;
+	private Thread[] threads;
+
+	public Part3(int n, int k, int t) {
+		this.n = n;
+		this.k = k;
+		this.t = t;
+		threads = new Thread[n];
+	}
+
+	public void reset() {
+		this.counter = 0;
+		this.counter2 = 0;
+	}
+
+	public void test() throws InterruptedException {
+
+		for (int a = 0; a < n; a++) {
+
+			threads[a] = new Thread() {
+				public void run() {
+					for (int i = 0; i < k; i++) {
+						System.out.printf("%s %s%n", counter, counter2);
+						counter++;
+						try {
+							Thread.sleep(t);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						counter2++;
+					}
+				}
+			};
+			threads[a].start();
+			Thread.sleep(100);
+		}
+	}
+
+	void testSync() throws InterruptedException {
+		for (int j = 0; j < n; j++) {
+			Thread.sleep(10);
+			threads[j] = new Thread();
+			synchronized (threads) {
+				for (int m = 0; m < k; m++) {
+					System.out.println(counter + " " + counter2);
+					counter++;
+					Thread.sleep(t);
+					counter2++;
+				}
+			}
+			threads[j].start();
+		}
+	}
+
+	public static void main(String[] args) {
+		Part3 p = new Part3(3, 5, 100);
+		try {
+			p.test();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			Thread.sleep(3 * 5 * 100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		p.reset();
+		try {
+			p.testSync();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+}

@@ -1,0 +1,282 @@
+package ua.nure.filonitch.practice7.controller;
+
+import java.io.File;
+import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.DefaultHandler;
+
+import ua.nure.filonitch.practice7.constants.Constants;
+import ua.nure.filonitch.practice7.constants.XML;
+import ua.nure.filonitch.practice7.entity.Card;
+import ua.nure.filonitch.practice7.entity.Cards;
+
+public class DOMController {
+	private String xmlFileName;
+
+	// main container
+	private Cards cards;
+
+	public DOMController(String xmlFileName) {
+		this.xmlFileName = xmlFileName;
+	}
+
+	public Cards getCard() {
+		return cards;
+	}
+
+	/**
+	 * Parses XML document.
+	 * 
+	 * @param validate If true validate XML document against its XML schema.
+	 */
+	public void parse(boolean validate) throws ParserConfigurationException, SAXException, IOException {
+
+		// obtain DOM parser
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+
+		// set properties for Factory
+
+		// XML document contains namespaces
+		dbf.setNamespaceAware(true);
+
+		// make parser validating
+		if (validate) {
+			// turn validation on
+			dbf.setFeature(Constants.FEATURE_TURN_VALIDATION_ON, true);
+
+			// turn on xsd validation
+			dbf.setFeature(Constants.FEATURE_TURN_SCHEMA_VALIDATION_ON, true);
+		}
+
+		DocumentBuilder db = dbf.newDocumentBuilder();
+
+		// set error handler
+		db.setErrorHandler(new DefaultHandler() {
+			@Override
+			public void error(SAXParseException e) throws SAXException {
+				// throw exception if XML document is NOT valid
+				throw e;
+			}
+		});
+
+		// parse XML document
+		Document document = db.parse(xmlFileName);
+
+		// get root element
+		Element root = document.getDocumentElement();
+
+		// create container
+		cards = new Cards();
+
+		// obtain questions nodes
+		NodeList questionNodes = root.getElementsByTagName(XML.CARD.value());
+
+		// process questions nodes
+		for (int j = 0; j < questionNodes.getLength(); j++) {
+			Card bank = getCard(questionNodes.item(j));
+			// add question to container
+			cards.getName().add(bank);
+		}
+	}
+
+	/**
+	 * Extracts question object from the question XML node.
+	 * 
+	 * @param qNode Question node.
+	 * @return Question object.
+	 */
+	private static Card getCard(Node qNode) {
+		Card card = new Card();
+		Element qElement = (Element) qNode;
+
+		// process question text
+
+		Node qtNode0 = qElement.getElementsByTagName(XML.THEMA.value()).item(0);
+		// set question text
+		card.setThema(qtNode0.getTextContent());
+
+		Node qtNode1 = qElement.getElementsByTagName(XML.YEAR.value()).item(0);
+		card.setYear(qtNode1.getTextContent());
+
+		Node qtNode2 = qElement.getElementsByTagName(XML.AUTHOR.value()).item(0);
+		card.setAuthor(qtNode2.getTextContent());
+
+		Node qtNode3 = qElement.getElementsByTagName(XML.VALUABLE.value()).item(0);
+		card.setValuable(qtNode3.getTextContent());
+
+		Node qtNode4 = qElement.getElementsByTagName(XML.TYPE.value()).item(0);
+		card.setType(qtNode4.getTextContent());
+
+		Node qtNode5 = qElement.getElementsByTagName(XML.TYPEOFCARD.value()).item(0);
+		card.setTypeofcard(qtNode5.getTextContent());
+
+		Node qtNode6 = qElement.getElementsByTagName(XML.ISBEINGSENT.value()).item(0);
+		card.setIsbeingsent(qtNode6.getTextContent());
+
+		/*
+		 * Node qtNode7 = qElement.getElementsByTagName(XML.TIME_CONSTRAINTS.value())
+		 * .item(0); card.setTimeConstraints(qtNode7.getTextContent());
+		 */
+
+		return card;
+	}
+
+	/**
+	 * Extracts answer object from the answer XML node.
+	 * 
+	 * @param aNode Answer node.
+	 * @return Answer object.
+	 */
+
+	// //////////////////////////////////////////////////////
+	// Static util methods
+	// //////////////////////////////////////////////////////
+
+	/**
+	 * Creates and returns DOM of the Test container.
+	 * 
+	 * @param test Test object.
+	 * @throws ParserConfigurationException
+	 */
+	public static Document getDocument(Cards cards) throws ParserConfigurationException {
+
+		// obtain DOM parser
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+
+		// set properties for Factory
+
+		// XML document contains namespaces
+		dbf.setNamespaceAware(true);
+
+		DocumentBuilder db = dbf.newDocumentBuilder();
+		Document document = db.newDocument();
+
+		// create root element
+		Element tElement = document.createElement(XML.CARDS.value());
+
+		// add root element
+		document.appendChild(tElement);
+
+		// add questions elements
+		for (Card question : cards.getName()) {
+			Element qElement = document.createElement(XML.CARD.value());
+		      tElement.appendChild(qElement);
+
+		      // add question text
+		      Element qtElement = document.createElement(XML.THEMA.value());
+		      qtElement.setTextContent(question.getThema());
+		      qElement.appendChild(qtElement);
+		      qtElement = document.createElement(XML.COUNTRY.value());
+		      qtElement.setTextContent(question.getCountry());
+		      qElement.appendChild(qtElement);
+
+		      qtElement = document.createElement(XML.YEAR.value());
+		      qtElement.setTextContent(question.getYear());
+		      qElement.appendChild(qtElement);
+
+		      qtElement = document.createElement(XML.AUTHOR.value());
+		      qtElement.setTextContent(question.getAuthor());
+		      qElement.appendChild(qtElement);
+		      
+		      qtElement = document.createElement(XML.VALUABLE.value());
+		      qtElement.setTextContent(question.getValuable());
+		      qElement.appendChild(qtElement);
+
+		      Element ttcElement = document.createElement(XML.TYPE.value());
+		      qElement.appendChild(ttcElement);
+
+		      Element ttElement = document.createElement(XML.TYPEOFCARD.value());
+		      ttElement.setTextContent(question.getTypeofcard());
+		      ttcElement.appendChild(ttElement);
+		      
+		      ttElement = document.createElement(XML.ISBEINGSENT.value());
+		      ttElement.setTextContent(question.getIsbeingsent());
+		      ttcElement.appendChild(ttElement);
+
+		      
+			
+			
+			
+			
+		}
+
+		return document;
+	}
+
+	/**
+	 * Saves Test object to XML file.
+	 * 
+	 * @param test        Test object to be saved.
+	 * @param xmlFileName Output XML file name.
+	 */
+	public static void saveToXML(Cards test, String xmlFileName)
+			throws ParserConfigurationException, TransformerException {
+		// Test -> DOM -> XML
+		saveToXML(getDocument(test), xmlFileName);
+	}
+
+	/**
+	 * Save DOM to XML.
+	 * 
+	 * @param document    DOM to be saved.
+	 * @param xmlFileName Output XML file name.
+	 */
+	public static void saveToXML(Document document, String xmlFileName) throws TransformerException {
+
+		StreamResult result = new StreamResult(new File(xmlFileName));
+
+		// set up transformation
+		TransformerFactory tf = TransformerFactory.newInstance();
+		javax.xml.transform.Transformer t = tf.newTransformer();
+		t.setOutputProperty(OutputKeys.INDENT, "yes");
+
+		// run transformation
+		t.transform(new DOMSource(document), result);
+	}
+
+	public static void main(String[] args) throws Exception {
+
+		// try to parse NOT valid XML document with validation on (failed)
+		DOMController domContr = new DOMController(Constants.INVALID_XML_FILE);
+		try {
+			// parse with validation (failed)
+			domContr.parse(true);
+		} catch (SAXException ex) {
+			System.err.println("====================================");
+			System.err.println("XML not valid");
+			System.err.println("Test object --> " + domContr.getCard());
+			System.err.println("====================================");
+		}
+
+		// try to parse NOT valid XML document with validation off (success)
+		domContr.parse(false);
+
+		// we have Test object at this point:
+		System.out.println("====================================");
+		System.out.print("Here is the bank: \n" + domContr.getCard());
+		System.out.println("====================================");
+
+		System.out.println("====================================");
+		System.out.print("Here is the bank: \n" + domContr.getCard());
+		System.out.println("====================================");
+
+		// save test in XML file
+		Cards test = domContr.getCard();
+		DOMController.saveToXML(test, Constants.INVALID_XML_FILE + ".dom-result.xml");
+	}
+}

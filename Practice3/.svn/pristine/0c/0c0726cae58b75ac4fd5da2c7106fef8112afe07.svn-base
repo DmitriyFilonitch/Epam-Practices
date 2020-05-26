@@ -1,0 +1,125 @@
+package ua.nure.filonitch.practice3;
+
+import java.security.SecureRandom;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Part1 {
+	public static final String FILENAME = "part1.txt";
+
+	public static void main(String[] args) {
+		String input = Util.readFile(FILENAME);
+		System.out.println(convert1(input));
+		System.out.println(convert2(input));
+		System.out.println(convert3("Login;Name;Email\r\n" + "ivanov;Ivan Ivanov;ivanov@mail.com\r\n"
+				+ "петров;Петр Петров;petrov@google.com\r\n" + "obama;Barack Obama;obama@google.com\r\n"
+				+ "bush;Джордж Буш;bush@mail.com"));
+		System.out.println(convert4(input));
+	}
+
+	private static String[][] gData(String input) {
+		// TODO Auto-generated method stub
+		String[] alllines = input.split("\r\n");
+		String[][] sdata = new String[alllines.length][3];
+		for (int k = 0; k < alllines.length; ++k)
+			sdata[k] = alllines[k].split(";");
+		return sdata;
+	}
+
+	private static String convert1(String input) {
+		// TODO Auto-generated method stub
+		String regex = "(?m)^(.+);(.+);(.+)$";
+		Pattern patt = Pattern.compile(regex);
+		Matcher match = patt.matcher(input);
+		match.find();
+		StringBuilder sb = new StringBuilder();
+		while (match.find()) {
+			sb.append(match.group(1) + " : ").append(match.group(3)).append(System.lineSeparator());
+		}
+
+		return sb.toString();
+	}
+
+	private static String convert2(String input) {
+		// TODO Auto-generated method stub
+		String regex = "(?m)^(.+);(.+);(.+)$";
+		StringBuilder strbild = new StringBuilder();
+		Pattern patt = Pattern.compile(regex);
+		Matcher match = patt.matcher(input);
+		String[] txt1 = input.split(";");
+		String[] txt2 = new String[input.length()];
+		String[] txt3 = new String[input.length()];
+		int f = 0;
+		for (int j = 3; j < txt1.length; j = j + 2) {
+			txt2 = txt1[j].split(" ");
+			for (int k = 0; k < txt2.length; k++) {
+				if (txt2[k] != null) {
+					txt3[f] = txt2[k];
+					f++;
+				} else {
+					break;
+				}
+			}
+		}
+
+		match.find();
+		int i = 1;
+		while (match.find()) {
+			strbild.append(txt3[i]).append(" ").append(txt3[i - 1]).append(" (Email : ").append(match.group(3) + ")")
+					.append(System.lineSeparator());
+			i = i + 2;
+		}
+		return strbild.toString();
+	}
+
+	public static String convert3(String input) {
+		// TODO Auto-generated method stub
+		String[][] Data = gData(input);
+		StringBuilder sb = new StringBuilder();
+
+		for (int i = 1; i < Data.length; ++i) {
+			String user_domain = Data[i][2].split("@")[1];
+			if (!user_domain.equals("0")) {
+
+				sb.append(user_domain).append(" ==> ");
+				for (int k = i; k < Data.length; ++k) {
+
+					String user_currentDomain = Data[k][2].split("@")[1];
+
+					if (user_currentDomain.equals(user_domain)) {
+						sb.append(Data[k][0]).append(", ");
+						Data[k][2] = "0@0";
+					}
+
+				}
+				sb.append(System.lineSeparator());
+
+			}
+		}
+
+		return sb.toString();
+	}
+
+	public static String convert4(String input) {
+		// TODO Auto-generated method stub
+		String regex = "(?m)^(.+)(.+)(.+)$";
+		Pattern patt = Pattern.compile(regex);
+		Matcher match = patt.matcher(input);
+
+		StringBuilder strbild = new StringBuilder();
+		SecureRandom passw = new SecureRandom();
+		int checker = 0;
+		while (match.find()) {
+			if (checker == 0) {
+				strbild.append(match.group(1)).append(match.group(2))
+						.append(match.group(3) + ";" + "Password" + System.lineSeparator());
+				checker++;
+			} else {
+				int generatePassword = 999 + passw.nextInt(9001);
+				strbild.append(match.group(1)).append(match.group(2))
+						.append(match.group(3) + ";" + generatePassword + System.lineSeparator());
+			}
+		}
+		return strbild.toString();
+	}
+}

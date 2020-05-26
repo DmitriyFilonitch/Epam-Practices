@@ -1,0 +1,26 @@
+DROP DATABASE IF EXISTS practice8;
+CREATE DATABASE practice8;
+
+USE practice8; 
+
+CREATE TABLE users (
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	login VARCHAR(12) UNIQUE NOT NULL
+);
+CREATE TABLE teams(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(12) UNIQUE NOT NULL
+);
+CREATE TABLE users_teams(
+	user_id INT,
+	FOREIGN KEY (user_id)  REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
+	team_id INT,
+	FOREIGN KEY (team_id)  REFERENCES teams (id) ON DELETE CASCADE ON UPDATE CASCADE,
+PRIMARY KEY (user_id, team_id)
+);
+
+INSERT INTO users VALUES (DEFAULT, 'ivanov');
+INSERT INTO teams VALUES(DEFAULT,'teamA');
+
+
+SELECT * from users , teams;

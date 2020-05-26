@@ -1,0 +1,84 @@
+package ua.nure.filonitch.practice4;
+
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.security.SecureRandom;
+import java.util.Scanner;
+
+public class Part2 {
+	private static final int LAST_ELEMENT = 50;
+	private static final String FILENAME_SORTED = "part2_sorted.txt";
+	public static final String FILENAME = "part2.txt";
+	private static final int LENGTH = 10;
+
+	public static void main(String[] args) throws IOException {
+		writeIntoTheFile();
+		readFromTheFile();
+		outputOfDoneInformationFromTheFile();
+	}
+
+	static void writeIntoTheFile() {
+		try (FileWriter writer = new FileWriter(FILENAME, false)) {
+			int ind = 0;
+			StringBuilder strbuild = new StringBuilder();
+			SecureRandom num = new SecureRandom();
+			for (int k = 0; k < 10; k++) {
+				int generateNum = num.nextInt(LAST_ELEMENT);
+				if (ind == 0) {
+					strbuild.append(generateNum);
+					ind++;
+				} else {
+					strbuild.append(" " + generateNum);
+				}
+			}
+			writer.write(strbuild.toString());
+			System.out.println("input ==> " + strbuild);
+		} catch (IOException ex) {
+			System.out.println(ex.getMessage());
+		}
+	}
+
+	static void readFromTheFile() throws IOException {
+		FileReader fr = new FileReader(FILENAME);
+		Scanner scann = new Scanner(fr);
+		scann.close();
+	}
+
+	private static void sortElementsOfArray(int[] array) {
+		for (int k = 0; k < array.length; ++k) {
+			for (int l = 1; l < array.length - k; ++l) {
+				if (array[l - 1] > array[l]) {
+					int temp = array[l - 1];
+					array[l - 1] = array[l];
+					array[l] = temp;
+				}
+			}
+		}
+	}
+
+	private static void outputOfDoneInformationFromTheFile() throws IOException {
+		String input = Util.readFile(FILENAME);
+		String[] num = input.split(" ");
+		int[] array = new int[LENGTH];
+		for (int k = 0; k < LENGTH; ++k) {
+			array[k] = Integer.parseInt(num[k]);
+		}
+		sortElementsOfArray(array);
+		BufferedWriter bufOut = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream(FILENAME_SORTED), "UTF-8"));
+		try {
+			for (int Arr : array) {
+				bufOut.append(String.valueOf(Arr)).append(" ");
+			}
+		} finally {
+			bufOut.close();
+		}
+
+		String output = Util.readFile(FILENAME_SORTED);
+		System.out.println("output ==> " + output);
+	}
+}

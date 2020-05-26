@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- XML schema -->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://nure.ua/filonitch/practice7"
+  xmlns:tns="http://nure.ua/filonitch/practice7">
+	<xsd:element name="Cards">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="Card" type="tns:Card"
+					maxOccurs="unbounded" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:complexType name="Card">
+		<xsd:sequence>
+			<xsd:element name="Thema" type="xsd:string" />
+			<xsd:element name="Country" type="xsd:string" />
+			<xsd:element name="Year" type="xsd:string" />
+			<xsd:element name="Author" type="xsd:string" />
+			<xsd:element name="Valuable" type="xsd:string" />
+			<xsd:element name="Type">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="TypeOfCard">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:enumeration value="Поздравительная" />
+									<xsd:enumeration value="Рекламная" />
+									<xsd:enumeration value="Обычная" />
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:element name="IsBeingSent" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>
+
+

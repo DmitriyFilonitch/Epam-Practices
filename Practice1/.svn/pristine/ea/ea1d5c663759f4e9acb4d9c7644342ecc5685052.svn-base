@@ -1,0 +1,25 @@
+package ua.nure.filonitch.practice1;
+
+import java.util.stream.IntStream;
+
+public class Part6 {
+	public static final int FIRST = 2;
+
+	public static void main(String[] args) {
+		int sizearray = Integer.parseInt(args[0]);
+		number(sizearray);
+	}
+
+	public static void number(int sizearray) {
+
+		int[] array = IntStream.iterate(FIRST, i -> i + 1)
+				.filter(j -> IntStream.range(FIRST, j).noneMatch(e -> j % e == 0)).limit(sizearray).toArray();
+		for (int i = 0; i < sizearray; i++) {
+			if (i == sizearray - 1) {
+				System.out.println(array[i] + " ");
+			} else {
+				System.out.print(array[i] + " ");
+			}
+		}
+	}
+}

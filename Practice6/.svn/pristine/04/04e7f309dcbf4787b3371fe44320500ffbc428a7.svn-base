@@ -1,0 +1,142 @@
+public class Tree<E extends Comparable<E>> {
+
+    private Node<E> treeHead;
+
+    public void add(E element) {
+        if (treeHead == null) {
+            treeHead = new Node<>(element);
+            return;
+        }
+        treeHead.addNode(new Node<>(element), treeHead);
+    }
+
+    public void add(E[] elements) {
+        for (E elem : elements) {
+            add(elem);
+        }
+    }
+
+    public boolean remove(E element) {
+        if (element.compareTo(treeHead.val) == 0) {
+            Node<E> nt = treeHead.mnextValue(treeHead);
+            if (nt != null) {
+                nt.left = treeHead.left;
+                this.treeHead = nt;
+                return true;
+            } else if (treeHead.left != null) {
+                this.treeHead = treeHead.left;
+                return true;
+            }
+            this.treeHead = null;
+            return true;
+        }
+        return helperRemove(element, treeHead, null, 0);
+    }
+
+    private boolean helperRemove(E element, Node<E> curr, Node<E> prev, int mode) {
+        if (element.compareTo(curr.val) == 0) {
+            if(curr.left == null || curr.right == null){
+                if(curr.left == null && curr.right == null){
+                    treeHead.setForPrev(null, prev, mode);
+                } else if(curr.left != null){
+                    treeHead.setForPrev(curr.left, prev, mode);
+                } else {
+                    treeHead.setForPrev(curr.right, prev, mode);
+                }
+                return true;
+            }
+            Node<E> nt = curr.mnextValue(curr);
+            nt.right = curr.right;
+            nt.left = curr.left;
+            treeHead.setForPrev(nt, prev, mode);
+            return true;
+        }
+        if (element.compareTo(curr.val) > 0 && curr.right != null) {
+            return helperRemove(element, curr.right, curr, 1);
+        }
+        if (curr.left != null) {
+            return helperRemove(element, curr.left, curr, -1);
+        }
+        return false;
+    }
+
+
+    public void print() {
+        StringBuilder res = new StringBuilder();
+        mprint(res, treeHead, new StringBuilder());
+        System.out.println(res.toString());
+    }
+
+    private void mprint(StringBuilder str, Node<E> tr, StringBuilder spaces) {
+        if (tr.left != null) {
+            spaces.append("  ");
+            mprint(str, tr.left, spaces);
+        }
+        str.append(spaces);
+        str.append(tr.val);
+        str.append(System.lineSeparator());
+        if (tr.right != null) {
+            spaces.append("  ");
+            mprint(str, tr.right, spaces);
+        }
+        spaces.delete(0, 2);
+    }
+
+    private static class Node<E extends Comparable<E>> {
+        private Node<E> left;
+        private Node<E> right;
+        private E val;
+
+        public Node(E val) {
+            this.val = val;
+            left = null;
+            right = null;
+        }
+
+        public void addNode(Node<E> elem, Node<E> curr) {
+            if (elem.val.equals(curr.val)) {
+                return;
+            }
+            if (elem.val.compareTo(curr.val) > 0) {
+                if (curr.right == null) {
+                    curr.right = elem;
+                    return;
+                }
+                addNode(elem, curr.right);
+            } else {
+                if (curr.left == null) {
+                    curr.left = elem;
+                    return;
+                }
+                addNode(elem, curr.left);
+            }
+        }
+
+        public Node<E> mnextValue(Node<E> element) {
+            if (element.right != null) {
+                return leftNext(element.right, element, 1);
+            } else {
+                return null;
+            }
+        }
+
+        private Node<E> leftNext(Node<E> element, Node<E> prev, int mode) {
+            if (element.left != null) {
+                return leftNext(element.left, element, -1);
+            } else {
+                setForPrev(null, prev, mode);
+                return element;
+            }
+
+        }
+
+        public void setForPrev(Node<E> setter, Node<E> prev, int mode) {
+            if(mode == 1){
+                prev.right = setter;
+            } else if(mode == -1){
+                prev.left = setter;
+            }
+        }
+
+    }
+}

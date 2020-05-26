@@ -1,0 +1,43 @@
+package ua.nure.filonitch.practice4;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+
+public class Part4 {
+
+	private String nameOfFile;
+
+	Part4(String filename) {
+		setFileName(filename);
+	}
+
+	public String getFileName() {
+		// TODO Auto-generated catch block
+		return nameOfFile;
+	}
+
+	public final void setFileName(String fileName) {
+		// TODO Auto-generated catch block
+		this.nameOfFile = fileName;
+	}
+
+	public void output() {
+		// TODO Auto-generated catch block
+		Parser pars = null;
+		try {
+			pars = new Parser(new File(getFileName()));
+		} catch (FileNotFoundException exc) {
+			// TODO Auto-generated catch block
+			exc.printStackTrace();
+		}
+		for (String string : pars) {
+			System.out.println(string);
+		}
+
+	}
+
+	public static void main(String[] args)  {
+		// TODO Auto-generated catch block
+		new Part4("part4.txt").output();
+	}
+}

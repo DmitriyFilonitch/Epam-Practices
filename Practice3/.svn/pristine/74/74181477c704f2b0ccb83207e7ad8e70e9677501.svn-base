@@ -1,0 +1,47 @@
+package ua.nure.filonitch.practice3;
+
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+public class Part4 {
+
+	public static void main(String[] args) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		System.out.println("MD5     :   " + hash("passw", "MD5"));
+		System.out.println("SHA-256 :   " + hash("passw", "SHA-256"));
+	}
+
+	public static String hash(String input, String algorithm)
+			throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		// TODO Auto-generated method stub
+		byte[] hash;
+		char[] chars = null;
+
+		MessageDigest digest = MessageDigest.getInstance(algorithm);
+		digest.update(input.getBytes("Cp1251"));
+
+		hash = digest.digest();
+		chars = new char[hash.length * 2];
+
+		for (int k = 0; k < hash.length; k++) {
+			symbolToChars(hash[k], chars, k);
+		}
+
+		return new String(chars);
+	}
+
+	private static void symbolToChars(byte b, char[] chars, int k) {
+		// TODO Auto-generated method stub
+		int Upper = b & 0b1111_0000;
+		Upper = Math.abs(Upper / 16);
+		chars[k * 2] = symbolToHex(Upper);
+		int Lower = b & 0b0000_1111;
+		chars[k * 2 + 1] = symbolToHex(Lower);
+	}
+
+	private static char symbolToHex(int e) {
+		// TODO Auto-generated method stub
+		return (e < 10) ? (char) (e + '0') : (char) (e + 'A' - 10);
+	}
+
+}

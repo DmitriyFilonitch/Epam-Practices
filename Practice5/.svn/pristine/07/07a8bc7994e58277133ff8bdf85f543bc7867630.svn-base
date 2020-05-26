@@ -1,0 +1,44 @@
+package ua.nure.filonitch.practice5;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+public class Part2 {
+	public static void main(String[] args) {
+		new Thread() {
+			public void run() {
+				try {
+					Spam.main(null);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}.start();
+
+		InputStream input = new InputStream() {
+			int c;
+
+			@Override
+			public int read() throws IOException {
+				// TODO Auto-generated method stub
+				if (true) {
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					if (c < System.lineSeparator().length()) {
+						return System.lineSeparator().getBytes()[c++];
+					}
+				}
+				return -1;
+			}
+		};
+		System.setIn(input);
+		System.setIn(System.in);
+	}
+	
+}

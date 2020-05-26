@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Cards>
+<Card>
+<Thema>Пейзаж</Thema>
+<Year>2019</Year>
+<Author>Иванов</Author>
+<Valuable>Историческая</Valuable>
+<Type>ПоздравительнаяNo</Type>
+<TypeOfCard>Поздравительная</TypeOfCard>
+<IsBeingSent>No</IsBeingSent>
+</Card>
+<Card>
+<Thema>Природа</Thema>
+<Year>2020</Year>
+<Author>Петров</Author>
+<Valuable>Историческая</Valuable>
+<Type>РекламнаяYes</Type>
+<TypeOfCard>Рекламная</TypeOfCard>
+<IsBeingSent>Yes</IsBeingSent>
+</Card>
+</Cards>

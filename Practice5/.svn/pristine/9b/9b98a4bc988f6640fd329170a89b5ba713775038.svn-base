@@ -1,0 +1,221 @@
+package ua.nure.filonitch.practice5;
+
+/*public class Part3 {
+	public static int counter;
+	public static int counter2;
+	public static int time;
+	public static int amount;
+	public static int amountOfThreads;
+
+	public Thread[] threads;
+
+	@SuppressWarnings("static-access")
+	public Part3(int n, int k, int t) {
+		this.amountOfThreads = n;
+		this.time = t;
+		this.amount = k;
+	}
+	public void reset() {
+		counter = 0;
+		counter2 = 0;
+	}
+	public static void main(String[] args) throws InterruptedException {
+		int n = 5;
+		int s = 5;
+		int f = 20;
+		Part3 p = new Part3(n, s, f);
+		p.test();
+		Thread.sleep(n * s * f);
+		p.reset();
+		p.testSync();
+	}
+
+	public void test() throws InterruptedException {
+		for (int t = 0; t < amountOfThreads; t++) {
+				Thread.sleep(10);
+			new Unsynchronized().start();
+		}
+	}
+
+
+	public void testSync() throws InterruptedException {
+		for (int a = 0; a < amountOfThreads; a++) {
+			Synch s = new Synch();
+			s.start();
+			s.join();
+		}
+	}
+
+	public static void goNoSynch() {
+		for (int a = 0; a < amount; a++) {
+			System.out.println(counter + " " + counter2);
+			counter++;
+			try {
+				Thread.sleep(time);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			counter2++;
+		}
+	}
+
+   
+public	synchronized static void goSynch() {
+		{
+		for (int a = 0; a < amount; a++) {
+			System.out.println(counter + " " + counter2);
+			counter++;
+			try {
+				Thread.sleep(time);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			counter2++;
+		}
+		}
+	}
+
+	public class Unsynchronized extends Thread {
+		public void run() {
+			Part3.goNoSynch();
+		}
+
+	}
+
+	public class Synch extends Thread {
+		public synchronized void run() {
+			Part3.goSynch();
+		}
+	}
+}
+*/
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import static java.lang.Thread.sleep;
+
+public final class Part3 {
+
+    private Part3() {
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        ExecutorService executors = Executors.newFixedThreadPool(2);
+
+        System.out.println("NON ATOMIC");
+        executors.execute(new NonSynchronizedThread());
+        executors.execute(new NonSynchronizedThread());
+        executors.awaitTermination(300, TimeUnit.MILLISECONDS);
+
+
+        System.out.println("ATOMIC");
+        executors.execute(new SynchronizedThread());
+        executors.execute(new SynchronizedThread());
+        executors.awaitTermination(3000, TimeUnit.MILLISECONDS);
+
+        executors.shutdown();
+    }
+}
+
+abstract class Task implements Runnable {
+
+    private static final long SLEEP_TIME = 250;
+
+    @Override
+    public void run() {
+        long nextTime = System.currentTimeMillis() + SLEEP_TIME;
+        while (nextTime > System.currentTimeMillis()) {
+            atomicOperation();
+        }
+    }
+
+    public abstract void atomicOperation();
+
+    protected void task() {
+        if (getA().equals(getB())) {
+            System.out.println(getA() + " == " + getB());
+        } else {
+            System.out.println(getA() + " != " + getB());
+        }
+        incrA();
+        try {
+            sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        incrB();
+    }
+
+    protected abstract void incrB();
+
+    protected abstract void incrA();
+
+    protected abstract Number getA();
+
+    protected abstract Number getB();
+
+}
+
+class NonSynchronizedThread extends Task {
+    private static int a = 0;
+    private static int b = 0;
+
+    public void atomicOperation() {
+        task();
+    }
+
+    @Override
+    protected void incrB() {
+        b++;
+    }
+
+    @Override
+    protected void incrA() {
+        a++;
+    }
+
+    @Override
+    protected Number getA() {
+        return a;
+    }
+
+    @Override
+    protected Number getB() {
+        return b;
+    }
+
+}
+
+class SynchronizedThread extends Task {
+    private static int a = 0;
+    private static int b = 0;
+
+    public void atomicOperation() {
+        synchronized (SynchronizedThread.class) {
+            task();
+        }
+    }
+
+    @Override
+    protected void incrB() {
+        b++;
+    }
+
+    @Override
+    protected void incrA() {
+        a++;
+    }
+
+    @Override
+    protected Number getA() {
+        return a;
+    }
+
+    @Override
+    protected Number getB() {
+        return b;
+    }
+}

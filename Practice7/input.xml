@@ -1,0 +1,26 @@
+<p7:Cards xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p7="http://nure.ua/filonitch/practice7"
+    xsi:schemaLocation="http://nure.ua/filonitch/practice7 input.xsd">
+	<Card>
+		<Thema>Природа</Thema>
+		<Country>Украина</Country>
+		<Year>2020</Year>
+		<Author>Петров</Author>
+		<Valuable>Историческая</Valuable>
+		<Type>
+			<TypeOfCard>Рекламная</TypeOfCard>
+			<IsBeingSent>Yes</IsBeingSent>
+		</Type>
+	</Card>
+	<Card>
+		<Thema>Пейзаж</Thema>
+		<Country>Польща</Country>
+		<Year>2019</Year>
+		<Author>Иванов</Author>
+		<Valuable>Историческая</Valuable>
+		<Type>
+			<TypeOfCard>Поздравительная</TypeOfCard>
+			<IsBeingSent>No</IsBeingSent>
+		</Type>
+	</Card>
+</p7:Cards>

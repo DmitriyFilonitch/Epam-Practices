@@ -1,0 +1,214 @@
+package ua.nure.filonitch.practice6.part6;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Scanner;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public final class Part6 {
+
+	public static final String CURSOR = " ==> ";
+    private String fileName;
+    private String[] input;
+
+    public static void main(String[] args) {
+        new Part6().inputing(args[0], args[1], args[2], args[3]);
+    }
+
+    private boolean inputing(String input, String fileName, String task, String operation) {
+        if (!("--input".equals(input) || "-i".equals(input))) {
+            return false;
+        }
+        if (!("--task".equals(task) || "-t".equals(task))) {
+            return false;
+        }
+
+        this.fileName = fileName;
+        spliting();
+
+        switch (operation) {
+            case "frequency":
+            	frequecyResult();
+                break;
+            case "length":
+            	lengthResult();
+                break;
+            case "duplicates":
+            	dublicatResult();
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
+    private String getInput() {
+        StringBuilder sb = new StringBuilder();
+        try (Scanner file = new Scanner(new File(fileName), "CP1251")) {
+            while (file.hasNext()) {
+                sb.append(file.next()).append(" ");
+            }
+        } catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} 
+        return sb.toString();
+    }
+
+    public void spliting() {
+        StringBuilder sb = new StringBuilder();
+        Pattern p = Pattern.compile("[a-zA-Z]+");
+        Matcher m = p.matcher(getInput());
+        while (m.find()) {
+            sb.append(m.group() + " ");
+        }
+        input = sb.toString().split(" ");
+    }
+    
+    
+    static class Counter {
+    	
+    	private int length;
+        private int place;
+        private int counterC = 1;
+        
+        public Counter(int place) {
+            this.place = place;
+        }
+    	
+    	public Counter(int length, int place) {
+            this.length = length;
+            this.place = place;
+        }
+    	
+    	 public Counter setCounter(int counter) {
+             this.counterC = counter;
+             return this;
+         }
+    	 
+        public int getLength() {
+            return length;
+        }
+        
+        public int getCounter() {
+            return counterC;
+        }
+    }
+    
+    private void lengthResult() {
+        
+        final HashMap<String, Counter> word = new HashMap<>();
+        for (int place = 0; place < input.length; place++) {
+            String inp = input[place];
+            word.putIfAbsent(inp, new Counter(inp.length(), place));
+        }
+        
+        TreeMap<String, Counter> sortedWords = new TreeMap<>(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+            	Counter counter1 = word.get(o1);
+                Counter counter2 = word.get(o2);
+                int length = counter2.length - counter1.length;
+                if (length == 0) {
+                    return counter1.place - counter2.place;
+                } else {
+                    return length;
+                }
+            }
+        });
+        sortedWords.putAll(word);
+
+        int i = 0;
+        for (Entry<String, Counter> entry : sortedWords.entrySet()) {
+        	String s = entry.getKey();
+        	if (i == 3) {
+                break;
+            }
+            i++;
+            System.out.println(s + CURSOR + sortedWords.get(s).getLength());
+        }
+    }
+    
+    private void frequecyResult() {
+    	
+        final HashMap<String, Counter> word = new HashMap<>();
+        for (int place = 0; place < input.length; place++) {
+            String inp = input[place];
+            if (word.get(inp) == null) {
+            	word.put(inp, new Counter(place));
+            } else {
+            	word.get(inp).setCounter(word.get(inp).getCounter() + 1);
+            }
+        }
+        
+        TreeMap<String, Counter> sortedWords = new TreeMap<>(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+            	Counter counter1 = word.get(o1);
+            	Counter counter2 = word.get(o2);
+                int count = counter2.counterC - counter1.counterC;
+                if (count == 0) {
+                    return counter1.place - counter2.place;
+                } else {
+                    return count;
+                }
+            }
+        });
+        sortedWords.putAll(word);
+
+        TreeSet<String> firstStrings = new TreeSet<>(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return o2.compareTo(o1);
+            }
+        });
+        int i = 0;
+        for (Entry<String, Counter> entry : sortedWords.entrySet()) {
+        	String s = entry.getKey();
+            if (i == 3) {
+                break;
+            }
+            i++;
+            firstStrings.add(s);
+        }
+        for (String s : firstStrings) {
+            System.out.println(s + CURSOR + sortedWords.get(s).getCounter());
+        }
+    }
+    
+    
+    private void dublicatResult() {
+        
+        final Map<String, Integer> word = new LinkedHashMap<>();
+        for (int place = 0; place < input.length; place++) {
+            String inp = input[place];
+            Integer counterDublicates = word.get(inp);
+            if (counterDublicates == null) {
+            	word.put(inp, 1);
+            } else {
+            	counterDublicates += 1;
+            	word.put(inp, counterDublicates);
+            }
+        }
+        int i = 0;
+        for (Map.Entry<String, Integer> wordCounter : word.entrySet()) {
+            if (i == 3) {
+                break;
+            }
+            if (wordCounter.getValue() > 1) {
+                i++;
+                System.out.println(new StringBuilder(
+                        wordCounter.getKey()).reverse().toString().toUpperCase(Locale.ENGLISH));
+            }
+        }
+
+    }
+}

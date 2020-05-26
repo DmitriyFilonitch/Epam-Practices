@@ -1,0 +1,86 @@
+package ua.nure.filonitch.practice6.part1;
+
+/*public class Word {
+	private String word;
+	private int frequency;
+
+	public Word(String word) {
+		this.word = word;
+		frequency = 1;
+	}
+
+	public int getFrequency() {
+		// TODO Auto-generated method stub
+		return frequency;
+	}
+
+	public Object getWord() {
+		// TODO Auto-generated method stub
+		return word;
+	}
+
+	public void setFrequency(int frequency) {
+		// TODO Auto-generated method stub
+		this.frequency = frequency;
+	}
+}*/
+import java.io.Serializable;
+import java.util.Comparator;
+
+public class Word {
+
+	private String word;
+	public int frequency;
+
+	Word(String value) {
+		this.word = value;
+		frequency = 1;
+	}
+
+	String getWord() {
+		return word;
+	}
+
+	public void setWord(String value) {
+		this.word = value;
+	}
+
+	int getFrequency() {
+		return frequency;
+	}
+
+	void setFrequency(int frequency) {
+		this.frequency = frequency;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		Word w = (Word) o;
+
+		return frequency == w.frequency && word.equals(w.word);
+	}
+
+	static class CompareWord implements Comparator<Word>, Serializable {
+		@Override
+		public int compare(Word o1, Word o2) {
+			return o1.getWord().compareTo(o2.getWord());
+		}
+	}
+
+	static class CompareFrequency implements Comparator<Word>, Serializable {
+		@Override
+		public int compare(Word o, Word o1) {
+			int comp = -o.getFrequency() + o1.getFrequency();
+			if (comp == 0) {
+				return new CompareWord().compare(o, o1);
+			}
+			return comp;
+		}
+	}
+}

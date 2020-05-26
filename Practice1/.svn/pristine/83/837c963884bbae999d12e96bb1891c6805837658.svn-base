@@ -1,0 +1,17 @@
+package ua.nure.filonitch.practice1;
+
+public class Part4 {
+	public static void main(String[] args) {
+		int a1 = Integer.parseInt(args[0]);
+		int a2 = Integer.parseInt(args[1]);
+		int m = Math.max(a1, a2);
+		for (int i = m; i > 0; i--) {
+			int x1, x2;
+			x1 = a1 % i;
+			x2 = a2 % i;
+			if (x1 == 0 && x2 == 0) {
+				System.out.println(i);
+			}
+		}
+	}
+}

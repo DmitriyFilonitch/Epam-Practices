@@ -1,0 +1,52 @@
+package ua.nure.filonitch.practice5;
+
+public class Part1 {
+	
+	static void third() {
+		for(int i = 0; i < 3; i++) {
+			System.out.println(Thread.currentThread().getName());
+			try {
+				Thread.sleep(300);
+			} catch (InterruptedException e) {
+				System.out.println("Error");
+			}
+		}
+	}
+	
+	static void thirds() {
+		third();
+	}
+	
+	public static void main(String[] args) throws InterruptedException {
+		Thread first = new MyClassFirst();
+		first.start();
+		
+		first.join();
+		
+		Thread second = new Thread(new MyClassSecond());
+		second.start();
+		
+		second.join();
+		
+		Thread third = new Thread(Part1::thirds);
+		third.start();
+		
+		third.join();
+	}
+	
+	static class MyClassFirst extends Thread {
+		@Override
+		public void run(){
+			Part1.third();
+		}
+	}
+	
+	static class MyClassSecond implements Runnable{
+		@Override
+		public void run() {
+			Part1.third();
+		}
+	}
+	}
+	
+

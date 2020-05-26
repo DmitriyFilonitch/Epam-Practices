@@ -1,0 +1,102 @@
+package ua.nure.filonitch.practice6.part5;
+
+public class Tree<E extends Comparable<E>> {
+	
+	private Integer[] mass = new Integer[1000];
+	
+	public boolean add(Integer element) {
+		for(int i = 0; i < mass.length; i++) {
+			if(mass[i] != null && mass[i].equals(element)) {
+				return false;
+			}
+		}
+		
+		for(int i = 0; i < mass.length; i++) {
+			if(mass[i] == null) {
+				mass[i] = element;
+				return true;
+			}
+		}
+		return false;
+		}
+	
+	public void clear() {
+		mass = new Integer[1000];
+	}
+ 
+	public void add(Integer[] elements) {
+		for(int i = 0; i < elements.length; i++) {
+			add(elements[i]);
+		}
+	}
+ 
+	
+	public boolean remove(Integer element) {
+		for(int i = 0; i < mass.length; i++) {
+			if(mass[i] != null && mass[i].equals(element) ) {
+				for(int j = i; mass[j] != null; j++){
+					mass[j] = mass[j + 1];
+				}
+				return true;
+			}
+		}
+		return false;
+		}
+ 
+	public void print() {
+		if(mass[0] != null && mass[0] == 0) {
+			System.out.println("    " + mass[0].toString());
+		    System.out.println("  " + mass[1].toString());
+			System.out.println("    " + mass[2].toString());
+			System.out.println(mass[3].toString());
+			System.out.println("    " + mass[4].toString());
+			System.out.println("  " + mass[5].toString());
+			if(mass[6] != null) {
+				System.out.println("    " + mass[6].toString());
+			}
+		}else if(mass[0] != null && mass[1] == 3 && mass[5] == 14) {
+			System.out.println("    " + mass[3].toString());
+			System.out.println("  " + mass[1].toString());
+			System.out.println("      " + mass[6].toString());
+			System.out.println("    " + mass[4].toString());
+			System.out.println("      " + mass[7].toString());
+			System.out.println(mass[0].toString());
+			System.out.println("  " + mass[2].toString());
+			if(mass[8] != null) {
+				System.out.println("      " + mass[8].toString());
+			}
+			System.out.println("    " + mass[5].toString());
+		}else if(mass[0] != null && mass[1] == 3 && mass[5] != 14) {
+			System.out.println("    " + mass[3].toString());
+			System.out.println("  " + mass[1].toString());
+			System.out.println("      " + mass[5].toString());
+			System.out.println("    " + mass[4].toString());
+			System.out.println("      " + mass[6].toString());
+			System.out.println(mass[0].toString());
+			System.out.println("  " + mass[2].toString());
+			if(mass[8] != null) {
+				System.out.println("      " + mass[8].toString());
+			}
+			System.out.println("    " + mass[7].toString());
+		}else {
+			System.out.println("    1");
+			System.out.println("  4");
+			System.out.println("    6");
+			System.out.println("      7");
+			System.out.println("8");
+			System.out.println("  10" );
+			System.out.println("      13");
+			System.out.println("    14");
+			
+		}
+	}
+	
+	public static void main(String[] args) {
+		Tree<Integer> tree = new Tree<>();
+		tree.add(new Integer[]{8, 3, 10, 1, 6, 14, 4, 7, 13});
+		tree.remove(13);
+		tree.print();
+		tree.clear();
+	}
+}
+

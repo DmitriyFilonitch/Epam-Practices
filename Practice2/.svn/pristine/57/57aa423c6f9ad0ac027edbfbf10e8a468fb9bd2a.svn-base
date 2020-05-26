@@ -1,0 +1,199 @@
+package ua.nure.filonitch.practice2;
+
+import java.util.Iterator;
+
+public class ListImpl implements List {
+	Object[] arr = new Object[0];
+	int size;
+	int arrSize = 0;
+	public int cur;
+
+	public static void main(String[] strings) {
+
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		arr = new Object[arrSize];
+		size = 0;
+	}
+
+	@Override
+	public int size() {
+		// TODO Auto-generated method stub
+		return this.size;
+	}
+
+	public class IteratorImpl implements Iterator<Object> {
+		int count = 0;
+		private int step = 0;
+
+		@Override
+		public boolean hasNext() {
+
+			return ListImpl.this.size > step;
+
+		}
+
+		@Override
+		public Object next() {
+			if (step > arr.length) {
+				throw new IllegalStateException();
+			} else {
+				return arr[step++];
+			}
+		}
+
+		public void remove() {
+			count++;
+			int n = step - 1;
+			size--;
+			if (step < count) {
+				throw new IllegalStateException();
+
+			} else if (step < arr.length) {
+				arr[n] = arr[n + 1];
+			}
+
+		}
+	}
+
+	@Override
+	public Iterator<Object> iterator() {
+		// TODO Auto-generated method stub
+		return new IteratorImpl();
+	}
+
+	@Override
+	public void addFirst(Object element) {
+		// TODO Auto-generated method stub
+		Object[] newArr = new Object[size + 1];
+		newArr[0] = element;
+		for (int i = 0, j = 1; i < size; i++, j++) {
+			newArr[j] = arr[i];
+		}
+		arr = newArr;
+		size++;
+	}
+
+	@Override
+	public void addLast(Object element) {
+		// TODO Auto-generated method stub
+		if (arr.length <= size) {
+			addSize();
+			arr[size++] = element;
+		} else {
+			arr[size++] = element;
+		}
+	}
+
+	public void addSize() {
+		// TODO Auto-generated method stub
+		if (arr.length == size) {
+			Object[] newArr = new Object[arr.length + 1];
+			for (int i = 0; i < arr.length; i++) {
+				newArr[i] = arr[i];
+			}
+			arr = newArr;
+		}
+	}
+
+	@Override
+	public void removeFirst() {
+		// TODO Auto-generated method stub
+		deleteByIndex(0);
+	}
+
+	public void deleteByIndex(int index) {
+		size--;
+		for (int i = index; i < size; i++) {
+			arr[i] = arr[i + 1];
+		}
+	}
+
+	@Override
+	public void removeLast() {
+		// TODO Auto-generated method stub
+		deleteByIndex(size);
+	}
+
+	@Override
+	public Object getFirst() {
+		// TODO Auto-generated method stub
+		return arr[0];
+	}
+
+	@Override
+	public Object getLast() {
+		// TODO Auto-generated method stub
+		return arr[size - 1];
+	}
+
+	@Override
+	public Object search(Object element) {
+		// TODO Auto-generated method stub
+		Object el = null;
+		if (element == null) {
+			for (int i = 0; i < size; i++) {
+				if (element == get(i)) {
+					el = get(i);
+					break;
+				}
+			}
+		}
+		if (element != null) {
+			for (int i = 0; i < size; i++) {
+				if (element.equals(get(i))) {
+					el = get(i);
+					break;
+				}
+			}
+		}
+		return el;
+	}
+
+	public Object get(int index) {
+		return arr[index];
+	}
+
+	@Override
+	public boolean remove(Object element) {
+		// TODO Auto-generated method stub
+		boolean status = false;
+		if (element == null) {
+			for (int i = 0; i < size; i++) {
+				if (element == arr[i]) {
+					deleteByIndex(i);
+					status = true;
+					break;
+				}
+			}
+		}
+		if (element != null) {
+			for (int i = 0; i < size; i++) {
+				if (element.equals(arr[i])) {
+					deleteByIndex(i);
+					status = true;
+					break;
+				}
+			}
+		}
+		return status;
+	}
+
+	public String toString() {
+		StringBuilder str = new StringBuilder();
+		str.append("[");
+		for (int i = 0; i < size; i++) {
+			str.append(arr[i]);
+			if (i != size - 1) {
+				str.append(", ");
+			}
+		}
+		str.append("]");
+
+		return str.toString();
+	}
+
+}

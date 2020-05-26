@@ -1,0 +1,179 @@
+package ua.nure.filonitch.practice2;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class ListImpl implements List {
+	Object[] arr = new Object[0];
+	int Size;
+	int ArrSize = 0;
+
+	public static void main(String[] strings) {
+
+	}
+
+	public void clear() {
+		arr = new Object[ArrSize];
+		Size = 0;
+	}
+
+	public int size() {
+		return this.Size;
+	}
+
+	public class IteratorImpl implements Iterator<Object> {
+		int Count = 0;
+		private int step = 0;
+
+		public boolean hasNext() {
+
+			return ListImpl.this.Size > step;
+		}
+
+		public Object next() {
+			if(!hasNext()){
+			      throw new NoSuchElementException();
+			    }
+			else {
+			if (step > arr.length) {
+				throw new IllegalStateException();
+			} else {
+				return arr[step++];
+			}
+			}
+		}
+
+
+		public void remove() {
+			Count++;
+			int n = step - 1;
+			Size--;
+			if (step < Count) {
+				throw new IllegalStateException();
+
+			} else if (step < arr.length) {
+				arr[n] = arr[n + 1];
+			}
+
+		}
+	}
+
+	public Iterator<Object> iterator() {
+		return new IteratorImpl();
+	}
+
+	public void addFirst(Object element) {
+		Object[] newArr = new Object[Size + 1];
+		newArr[0] = element;
+		for (int i = 0, j = 1; i < Size; i++, j++) {
+			newArr[j] = arr[i];
+		}
+		arr = newArr;
+		Size++;
+	}
+
+	public void addLast(Object element) {
+		if (arr.length <= Size) {
+			addSize();
+			arr[Size++] = element;
+		} else {
+			arr[Size++] = element;
+		}
+	}
+
+	public void addSize() {
+		if (arr.length == Size) {
+			Object[] newArr = new Object[arr.length + 1];
+			for (int i = 0; i < arr.length; i++) {
+				newArr[i] = arr[i];
+			}
+			arr = newArr;
+		}
+	}
+
+	public void removeFirst() {
+		deleteByIndex(0);
+	}
+
+	public void deleteByIndex(int index) {
+		Size--;
+		for (int i = index; i < Size; i++) {
+			arr[i] = arr[i + 1];
+		}
+	}
+
+	public void removeLast() {
+		deleteByIndex(Size);
+	}
+
+	public Object getFirst() {
+		return arr[0];
+	}
+
+	public Object getLast() {
+		return arr[Size - 1];
+	}
+
+	public Object search(Object element) {
+		Object elem = null;
+		if (element == null) {
+			for (int i = 0; i < Size; i++) {
+				if (element == get(i)) {
+					elem = get(i);
+					break;
+				}
+			}
+		}
+		if (element != null) {
+			for (int i = 0; i < Size; i++) {
+				if (element.equals(get(i))) {
+					elem = get(i);
+					break;
+				}
+			}
+		}
+		return elem;
+	}
+
+	public Object get(int index) {
+		return arr[index];
+	}
+
+	public boolean remove(Object element) {
+		boolean status = false;
+		if (element == null) {
+			for (int i = 0; i < Size; i++) {
+				if (element == arr[i]) {
+					deleteByIndex(i);
+					status = true;
+					break;
+				}
+			}
+		}
+		if (element != null) {
+			for (int i = 0; i < Size; i++) {
+				if (element.equals(arr[i])) {
+					deleteByIndex(i);
+					status = true;
+					break;
+				}
+			}
+		}
+		return status;
+	}
+
+	public String toString() {
+		StringBuilder str = new StringBuilder();
+		str.append("[");
+		for (int i = 0; i < Size; i++) {
+			str.append(arr[i]);
+			if (i != Size - 1) {
+				str.append(", ");
+			}
+		}
+		str.append("]");
+
+		return str.toString();
+	}
+
+}

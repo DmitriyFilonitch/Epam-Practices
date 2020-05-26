@@ -1,0 +1,89 @@
+package ua.nure.filonitch.practice5;
+
+public class Part3 {
+	public static int counter;
+	public static int counter2;
+	public static int time;
+	public static int amount;
+	public int amountOfThreads;
+
+	public Thread[] threads;
+
+	public Part3(int n, int k, int t) {
+		this.time = t;
+		this.amount = k;
+		this.amountOfThreads = n;
+	}
+
+	public static void main(String[] args) throws InterruptedException {
+		int t = 5;
+		int k = 5;
+		int n = 20;
+		Part3 p = new Part3(t, k, n);
+		p.test();
+		//Thread.sleep(t * k * n);
+		p.reset();
+		p.testSync();
+	}
+
+	public void test() {
+		for (int t = 0; t < amountOfThreads; t++) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			new Unsynchronized().start();
+		}
+	}
+
+	public void reset() {
+		counter = 0;
+		counter2 = 0;
+	}
+
+	public void testSync() throws InterruptedException {
+		for (int a = 0; a < amountOfThreads; a++) {
+			Synchronized s = new Synchronized();
+			s.start();
+			s.join();
+		}
+	}
+
+	public static  void goNoSynch() {
+		for (int a = 0; a < amount; a++) {
+			System.out.println(counter + " " + counter2);
+			counter++;
+			try {
+				Thread.sleep(time);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			counter2++;
+		}
+	}
+
+	public static  void goSynch() {
+		for (int a = 0; a < amount; a++) {
+			System.out.println(counter + " " + counter2);
+			counter++;
+			counter2++;
+		}
+	}
+
+	public class Unsynchronized extends Thread {
+		public void run() {
+			Part3.goNoSynch();
+		}
+
+	}
+
+	public class Synchronized extends Thread {
+		@Override
+		public void run() {
+			Part3.goSynch();
+		}
+	}
+}

@@ -1,0 +1,77 @@
+
+package ua.nure.filonitch.practice3;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Part2 {
+	public static final String FILENAME = "part2.txt";
+
+	public static void main(String[] args) {
+		String input = Util.readFile(FILENAME);
+		System.out.println(convert(input));
+	}
+
+	public static String convert(String input) {
+		// TODO Auto-generated method stub
+		StringBuilder sb = new StringBuilder();
+		String regex = "[a-zA-Zа-яА-Я]+";
+		Pattern patt = Pattern.compile(regex);
+		Matcher match = patt.matcher(input);
+		while (match.find()) {
+			sb.append(match.group() + " ");
+
+		}
+
+		return min(sb.toString());
+
+	}
+
+	private static String min(String string) {
+		// TODO Auto-generated method stub
+		int min = 100, max = 0, k = 0;
+		StringBuilder str = new StringBuilder();
+		StringBuilder str1 = new StringBuilder();
+		String minimal_string = "Min:";
+		String maximal_string = "Max:";
+		str.append(minimal_string);
+		str1.append(maximal_string);
+		String[] Array = new String[string.length()];
+		String regex = "[a-zA-Zа-яА-Я]+";
+		Pattern patt = Pattern.compile(regex);
+		Matcher match = patt.matcher(string);
+		while (match.find()) {
+			Array[k] = match.group();
+			if (Array[k].length() < min) {
+				min = Array[k].length();
+			} else if (Array[k].length() > max) {
+				max = Array[k].length();
+			}
+			k++;
+		}
+		delete_element(Array);
+		for (int i = 0; i < Array.length; i++) {
+			if (Array[i] != null && Array[i].length() == min) {
+				str.append(" " + Array[i] + ", ");
+			} else if (Array[i] != null && Array[i].length() == max) {
+				str1.append(" " + Array[i] + ", ");
+			}
+
+		}
+
+		return str.toString().substring(0, str.length() - 1) + System.lineSeparator()
+				+ str1.toString().substring(0, str1.length() - 1);
+	}
+
+	private static String[] delete_element(String[] array) {
+		// TODO Auto-generated method stub
+		for (int m = 0; m < array.length - 1; m++) {
+			for (int s = m + 1; s < array.length; s++) {
+				if (array[m] != null && array[m].equals(array[s])) {
+					array[s] = null;
+				}
+			}
+		}
+		return array;
+	}
+}

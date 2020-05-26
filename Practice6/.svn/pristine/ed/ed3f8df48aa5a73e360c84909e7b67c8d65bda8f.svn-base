@@ -1,0 +1,391 @@
+package ua.nure.filonitch.practice6.part6;
+
+/*
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Scanner;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public final class Part6 {
+
+	public static final String ROW = " ==> ";
+     String 	nameOfFile;
+     String[] input;
+
+    public static void main(String[] args) {
+        new Part6().inputing(args[0], args[1], args[2], args[3]);
+    }
+
+    private boolean inputing(String i, String nameOfFile, String tsk, String op) {
+        if (!("--input".equals(input) || "-i".equals(input))) {
+            return false;
+        }
+        if (!("--task".equals(tsk) || "-t".equals(tsk))) {
+            return false;
+        }
+
+        this.nameOfFile = nameOfFile;
+        spliting();
+
+        switch (op) {
+            case "frequency":
+            	frequecyResult();
+                break;
+            case "length":
+            	lengthResult();
+                break;
+            case "duplicates":
+            	dublicatResult();
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
+    private String getInput() {
+        StringBuilder strbuild = new StringBuilder();
+        try (Scanner f = new Scanner(new File(nameOfFile), "CP1251")) {
+            while (f.hasNext()) {
+                strbuild.append(f.next()).append(" ");
+            }
+        } catch (FileNotFoundException excp) {
+			excp.printStackTrace();
+		} 
+        return strbuild.toString();
+    }
+
+    public void spliting() {
+        StringBuilder strbuild = new StringBuilder();
+        Pattern patt = Pattern.compile("[a-zA-Z]+");
+        Matcher match = patt.matcher(getInput());
+        while (match.find()) {
+            strbuild.append(match.group() + " ");
+        }
+        input = strbuild.toString().split(" ");
+    }
+    
+    
+    static class Count {
+    	private int length;
+        private int place;
+        private int counterC = 1;
+        
+        public Count(int place) {
+            this.place = place;
+        }
+    	
+    	public Count(int length, int place) {
+            this.length = length;
+            this.place = place;
+        }
+    	
+    	 public Count setCounter(int counter) {
+             this.counterC = counter;
+             return this;
+         }
+    	 
+        public int getLength() {
+            return length;
+        }
+        
+        public int getCounter() {
+            return counterC;
+        }
+    }
+    
+    private void lengthResult() {
+        
+        final HashMap<String, Count> word = new HashMap<>();
+        for (int place = 0; place < input.length; place++) {
+            String inp = inp[place];
+            word.putIfAbsent(inp, new Count(inp.length(), place));
+        }
+        
+        TreeMap<String, Count> sortedWords = new TreeMap<>(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+            	Count counter1 = word.get(o1);
+                Count counter2 = word.get(o2);
+                int length = counter2.length - counter1.length;
+                if (length == 0) {
+                    return counter1.place - counter2.place;
+                } else {
+                    return length;
+                }
+            }
+        });
+        sortedWords.putAll(word);
+
+        int i = 0;
+        for (Entry<String, Count> entry : sortedWords.entrySet()) {
+        	String s = entry.getKey();
+        	if (i == 3) {
+                break;
+            }
+            i++;
+            System.out.println(s + ROW + sortedWords.get(s).getLength());
+        }
+    }
+    
+    private void frequecyResult() {
+    	
+        final HashMap<String, Count> word = new HashMap<>();
+        for (int place = 0; place < input.length; place++) {
+            String inp = inp[place];
+            if (word.get(inp) == null) {
+            	word.put(inp, new Count(place));
+            } else {
+            	word.get(inp).setCounter(word.get(inp).getCounter() + 1);
+            }
+        }
+        
+        TreeMap<String, Count> sortedWords = new TreeMap<>(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+            	Count counter1 = word.get(o1);
+            	Count counter2 = word.get(o2);
+                int count = counter2.counterC - counter1.counterC;
+                if (count == 0) {
+                    return counter1.place - counter2.place;
+                } else {
+                    return count;
+                }
+            }
+        });
+        sortedWords.putAll(word);
+
+        TreeSet<String> firstStrings = new TreeSet<>(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return o2.compareTo(o1);
+            }
+        });
+        int i = 0;
+        for (Entry<String, Count> entry : sortedWords.entrySet()) {
+        	String s = entry.getKey();
+            if (i == 3) {
+                break;
+            }
+            i++;
+            firstStrings.add(s);
+        }
+        for (String s : firstStrings) {
+            System.out.println(s + ROW + sortedWords.get(s).getCounter());
+        }
+    }
+    
+    
+    private void dublicatResult() {
+        
+        final Map<String, Integer> word = new LinkedHashMap<>();
+        for (int place = 0; place < input.length; place++) {
+            String inp = inp[place];
+            Integer counterDublicates = word.get(inp);
+            if (counterDublicates == null) {
+            	word.put(inp, 1);
+            } else {
+            	counterDublicates += 1;
+            	word.put(inp, counterDublicates);
+            }
+        }
+        int i = 0;
+        for (Map.Entry<String, Integer> wordCounter : word.entrySet()) {
+            if (i == 3) {
+                break;
+            }
+            if (wordCounter.getValue() > 1) {
+                i++;
+                System.out.println(new StringBuilder(
+                        wordCounter.getKey()).reverse().toString().toUpperCase(Locale.ENGLISH));
+            }
+        }
+
+    }
+}
+*/
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.Serializable;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Part6 {
+
+	private String NameOfFile;
+
+	public String getOfFileName() {
+		return NameOfFile;
+	}
+
+	public void setOfFileName(String NameOfFile) {
+		this.NameOfFile = NameOfFile;
+	}
+
+	private String txt;
+
+	private Map<String, Integer> m = new HashMap<String, Integer>();
+
+	private SortByValue sbv = new SortByValue(m);
+
+	private Map<String, Integer> m2 = new TreeMap<String, Integer>(sbv);
+
+	private String[] ar;
+
+	public final void arrInitialize() {
+
+		try {
+			StringBuilder strbuild = new StringBuilder();
+			Scanner scanner = new Scanner(new File(getOfFileName()), "CP1251");
+			while (scanner.hasNext()) {
+				strbuild.append(scanner.next() + " ");
+			}
+			txt = strbuild.toString();
+			scanner.close();
+		} catch (FileNotFoundException excp) {
+			System.err.println("File " + getOfFileName() + " not found");
+		}
+		ar = initialize();
+
+	}
+
+	public final String[] initialize() {
+		StringBuilder strbuild = new StringBuilder();
+		Pattern patt = Pattern.compile("[A-za-zÀ-ßà-ÿ]+");
+		Matcher match= patt.matcher(txt);
+		while (match.find()) {
+			strbuild.append(match.group() + " ");
+		}
+		return strbuild.toString().split(" ");
+
+	}
+
+	public void frequency() {
+		for (int k = 0; k < ar.length; k++) {
+			if (m.containsKey(ar[k])) {
+				int loc = m.get(ar[k]) + 1;
+				m.put(ar[k], loc);
+				continue;
+			}
+			m.put(ar[k], 1);
+		}
+		m2.putAll(m);
+	}
+
+	public void length() {
+
+		for (int k = 0; k < ar.length; k++) {
+
+			if (m.containsKey(ar[k])) {
+				continue;
+			}
+			m.put(ar[k], ar[k].length());
+		}
+		m2.putAll(m);
+
+	}
+
+	public String inverseString(String str) {
+		StringBuilder strbuild = new StringBuilder();
+		for (int k = str.length() - 1; k >= 0; k--) {
+			strbuild.append(String.valueOf(str.charAt(k)).toUpperCase());
+
+		}
+		return strbuild.toString();
+	}
+
+	public String inverse() {
+		int c = 0;
+		StringBuilder strbuild = new StringBuilder();
+		for (int i = 0; c < 3 && i < ar.length; i++) {
+			if (m.containsKey(ar[i])) {
+				strbuild.append(inverseString(ar[i]) + System.lineSeparator());
+				c++;
+				continue;
+			}
+			m.put(ar[i], ar[i].length());
+		}
+		return strbuild.toString();
+	}
+
+	public void output() {
+		int k = 0;
+		for (Map.Entry<String, Integer> en : m2.entrySet()) {
+
+			if (k == 3) {
+				break;
+			}
+
+			System.out.println(en.getKey() + " " + en.getValue());
+			k++;
+		}
+	}
+
+	public boolean consoleOutput(String str, String NameOfFile, String str2,
+			String op) {
+		if (!(str.equals("--input") || str.equals("-i"))) {
+			System.err.println("Wrong operation");
+			return false;
+		}
+		setOfFileName(NameOfFile);
+		if (!(str2.equals("--task") || str2.equals("-t"))) {
+			System.err.println("Wrong task");
+			return false;
+		}
+		if (op.equals("frequency")) {
+			this.arrInitialize();
+			this.frequency();
+			this.output();
+			return true;
+		} else if (op.equals("length")) {
+			this.arrInitialize();
+			this.length();
+			this.output();
+			return true;
+		} else if (op.equals("duplicates")) {
+			this.arrInitialize();
+			System.out.println(this.inverse());
+		}
+		return true;
+	}
+
+	public static void main(String[] args) {
+		Part6 p = new Part6();
+		p.consoleOutput(args[0], args[1], args[2], args[3]);
+	}
+
+	private static class SortByValue implements Comparator<String>,
+			Serializable {
+
+		public SortByValue(Map<String, Integer> map) {
+			this.map = map;
+		}
+
+		private Map<String, Integer> map;
+
+		@Override
+		public int compare(String o, String o1) {
+			if (map.get(o) >= map.get(o1)) {
+				return -1;
+			} else {
+				return 1;
+			}
+		}
+
+	}
+
+}

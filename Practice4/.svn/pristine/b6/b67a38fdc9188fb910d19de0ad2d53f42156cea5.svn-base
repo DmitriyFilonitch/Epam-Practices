@@ -1,0 +1,120 @@
+package ua.nure.filonitch.practice4;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Part3 {
+	public static void main(String[] args) {
+		try {
+			Part3.input();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	static String getData() throws IOException {
+		// TODO Auto-generated catch block
+		StringBuilder strbuild = new StringBuilder();
+		Scanner sca = new Scanner(new File("part3.txt"), "Cp1251");
+		while (sca.hasNextLine()) {
+			strbuild.append(sca.nextLine()).append(System.lineSeparator());
+		}
+		return strbuild.toString();
+	}
+
+	public static void input() throws IOException {
+		String strData = getData();
+		Scanner sc = new Scanner(System.in);
+		while (sc.hasNext()) {
+			String strNext = sc.nextLine();
+			switch (strNext) {
+			case "int":
+				System.out.println(CheckInt(strData));
+				continue;
+			case "char":
+				System.out.println(CheckChar(strData));
+				continue;
+			case "String":
+				System.out.println(CheckString(strData));
+				continue;
+			case "double":
+				System.out.println(CheckDouble(strData));
+				continue;
+			case "stop":
+				return;
+			default:
+				System.out.println("Incorrect input");
+			}
+		}
+	}
+
+	public static String CheckInt(String input) {
+		String regexp = "(?<![-.])\\b[0-9]+\\b(?!\\.)";
+		StringBuilder strbuild = new StringBuilder();
+		Pattern patt = Pattern.compile(regexp);
+		Matcher match = patt.matcher(input);
+		int symb = 0;
+		while (match.find()) {
+			strbuild.append(match.group() + " ");
+			symb++;
+		}
+		if (symb == 0) {
+			strbuild.append("No such values");
+		}
+		return strbuild.toString();
+	}
+
+	public static String CheckDouble(String input) {
+		String regexp = "[+-]?([0-9]*[.])[0-9]+";
+		StringBuilder strbuild = new StringBuilder();
+		Pattern patt = Pattern.compile(regexp);
+		Matcher match = patt.matcher(input);
+		int symb = 0;
+		while (match.find()) {
+			strbuild.append(match.group() + " ");
+			symb++;
+		}
+		if (symb == 0) {
+			strbuild.append("No such values");
+		}
+		return strbuild.toString();
+	}
+
+	public static String CheckChar(String input) {
+		String regexp = "(?U)\\b\\w\\b";
+		StringBuilder strbuild = new StringBuilder();
+		Pattern patt = Pattern.compile(regexp);
+		Matcher match = patt.matcher(input);
+		int symb = 0;
+		while (match.find()) {
+			strbuild.append(match.group() + " ");
+			symb++;
+		}
+		if (symb == 0) {
+			strbuild.append("No such values");
+		}
+		return strbuild.toString();
+	}
+
+	public static String CheckString(String input) {
+		String regexp = "(?U)\\b[^\\d\\W]{2,}\\b";
+		StringBuilder strbuild = new StringBuilder();
+		Pattern patt = Pattern.compile(regexp);
+		Matcher match = patt.matcher(input);
+		int symb = 0;
+		while (match.find()) {
+			if (match.group().length() > 1) {
+				strbuild.append(match.group() + " ");
+				symb++;
+			}
+		}
+		if (symb == 0) {
+			strbuild.append("No such values");
+		}
+		return strbuild.toString();
+	}
+}

@@ -1,0 +1,120 @@
+package ua.nure.filonitch.practice5;
+
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Random;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+
+class Part4 {
+	public static void initialArray(int[][] arr) {
+		Random rand = new Random();
+		for (int k = 0; k < arr.length; k++) {
+			for (int m = 0; m < arr[0].length; m++) {
+				arr[k][m] = rand.nextInt();
+			}
+		}
+	}
+
+	public static void saveArrToFile(int[][] arr, String path) {
+		try {
+			BufferedWriter b = new BufferedWriter(new FileWriter(path));
+			b.write(String.valueOf(arr.length));
+			b.newLine();
+			b.write(String.valueOf(arr[0].length));
+			b.newLine();
+			for (int k = 0; k < arr.length; k++) {
+				for (int m = 0; m < arr[0].length; m++) {
+					b.write(String.valueOf(arr[k][m]));
+					b.newLine();
+				}
+			}
+			b.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public static int[][] loadArrFromFile(String path) {
+		int[][] array = null;
+		try (BufferedReader b = new BufferedReader(new FileReader(path))) {
+			int rowsOfArray = Integer.parseInt(b.readLine());
+			int columnsOfArray = Integer.parseInt(b.readLine());
+			array = new int[rowsOfArray][columnsOfArray];
+			for (int k = 0; k < array.length; k++) {
+				for (int m = 0; m < array[0].length; m++) {
+					array[k][m] = Integer.parseInt(b.readLine());
+				}
+			}
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		return array;
+	}
+
+	public static int maxByOneThread(int[][] matrica) throws InterruptedException {
+		int max = 0;
+		for (int i = 0; i < matrica.length; i++) {
+			for (int j = 0; j < matrica[i].length; j++) {
+				if (max < matrica[i][j]) {
+					max = matrica[i][j];
+				}
+				Thread.sleep(1);
+			}
+		}
+		return max;
+	}
+
+	public static int maxWithMulti(int[][] matrix) {
+		int num = 0;
+		for (int k = 0; k < matrix.length; k++) {
+			Worker w = new Worker(k, loadArrFromFile("part4.txt"));
+			if (w.run() > num) {
+				num = w.run();
+			}
+		}
+		return num;
+	}
+
+	 static class Worker {
+		 int[][] matrix;
+		 int row;
+		 int max;
+
+		private Worker(int m, int[][] matrixs) {
+			row = m;
+			matrix = matrixs.clone();
+		}
+
+		public int run() {
+			for (int j = 0; j < matrix[row].length; j++) {
+				if (max < matrix[row][j]) {
+					max = matrix[row][j];
+				}
+				try {
+					Thread.sleep(1);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			return max;
+		}
+	}
+
+	public static void main(String[] args) throws Exception {
+		int[][] array = new int[4][100];
+		initialArray(array);
+		saveArrToFile(array, "part4.txt");
+		int[][] m = loadArrFromFile("part4.txt");
+		long start = System.currentTimeMillis();
+		System.out.println(maxWithMulti(m));
+		long end = System.currentTimeMillis();
+		System.out.println((end - start) / 5);
+		long start1 = System.currentTimeMillis();
+		System.out.println(maxWithMulti(m));
+		long end1 = System.currentTimeMillis();
+		System.out.println((end1 - start1));
+
+	}
+}

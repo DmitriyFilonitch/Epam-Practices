@@ -1,0 +1,164 @@
+package ua.nure.filonitch.practice5;
+
+public class Part3 {
+	private int counter;
+	private int counter2;
+	private int kolvo;
+	private int time;
+	private int treads;
+	
+	
+	public Part3(int n, int k, int t) {
+		this.treads = n;
+		this.kolvo = k;
+		this.time = t;
+	}
+	
+	public void reset() { 
+		counter = 0;
+		counter2 = 0;
+		
+	}	
+	public void test() throws InterruptedException {
+		for(int i = 0; i < treads; i++ ) {
+			Thread.sleep(1);
+			new NoSinchr().start();
+		}
+	}
+	
+	public class NoSinchr extends Thread{
+		@Override
+		public void run() {
+			for(int i = 0; i < kolvo; i++) {
+				System.out.println(counter + " " + counter2);
+				counter++;
+				try {
+					sleep(time);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				counter2++;
+			}
+		}
+	} 
+
+	public class Sinchr extends Thread{
+		@Override
+		public void run() {
+			for(int i = 0; i < kolvo; i++) {
+				System.out.println(counter + " " + counter2);
+				counter++;
+				counter2++;
+			}
+		}
+	} 
+	
+	public void testSync() throws InterruptedException { 
+		for(int i = 0; i < treads; i++ ) {
+			new Sinchr().start();
+			new Sinchr().join();
+		}
+	}	
+	
+	public static void main(String[] args) throws InterruptedException {
+		int n = 5;
+		int s = 5;
+		int f = 20;
+		Part3 p = new Part3(n, s, f);
+		p.test();
+		Thread.sleep(n*s*f);
+		p.reset();
+		p.testSync();
+		
+	}	
+}
+/*public class Part3 {
+	public static int counter;
+	public static int counter2;
+	public static int time;
+	public static int amount;
+	public static int amountOfThreads;
+
+	public Thread[] threads;
+
+	@SuppressWarnings("static-access")
+	public Part3(int n, int k, int t) {
+		this.time = t;
+		this.amount = k;
+		this.amountOfThreads = n;
+	}
+	public void reset() {
+		counter = 0;
+		counter2 = 0;
+	}
+	public static void main(String[] args) throws InterruptedException {
+		int n = 5;
+		int s = 5;
+		int f = 20;
+		Part3 p = new Part3(n, s, f);
+		p.test();
+		Thread.sleep(n * s * f);
+		p.reset();
+		p.testSync();
+	}
+
+	public void test() throws InterruptedException {
+		for (int t = 0; t < amountOfThreads; t++) {
+				Thread.sleep(10);
+			new Unsynchronized().start();
+		}
+	}
+
+
+	public void testSync() throws InterruptedException {
+		for (int a = 0; a < amountOfThreads; a++) {
+			Synchronized s = new Synchronized();
+			s.start();
+			s.join();
+		}
+	}
+
+	public static void goNoSynch() {
+		for (int a = 0; a < amount; a++) {
+			System.out.println(counter + " " + counter2);
+			counter++;
+			try {
+				Thread.sleep(time);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			counter2++;
+		}
+	}
+
+   
+	synchronized static void goSynch() {
+		{
+		for (int a = 0; a < amount; a++) {
+			System.out.println(counter + " " + counter2);
+			counter++;
+			try {
+				Thread.sleep(time);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			counter2++;
+		}
+		}
+	}
+
+	public class Unsynchronized extends Thread {
+		public void run() {
+			Part3.goNoSynch();
+		}
+
+	}
+
+	public class Synchronized extends Thread {
+		public void run() {
+			Part3.goSynch();
+		}
+	}
+}*/

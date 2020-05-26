@@ -1,0 +1,38 @@
+package ua.nure.filonitch.practice5;
+
+public class Part6 extends Thread {
+	@Override
+	public void run() {
+		try {
+			synchronized (this) {
+				wait();
+				join();
+			}
+		} catch (InterruptedException ex) {
+		}
+	}
+
+	public static void main(String[] args) {
+		try {
+			Thread t = new Part6();
+			t.start();
+			synchronized (t) {
+				Thread.sleep(100);
+				System.out.println(t.getState());
+			}
+			Thread.sleep(10);
+
+			System.out.println(t.getState());
+
+			t.interrupt();
+			t.join();
+
+			System.out.println(t.getState());
+
+			t.interrupt();
+			t.interrupt();
+
+		} catch (InterruptedException e) {
+		}
+	}
+}

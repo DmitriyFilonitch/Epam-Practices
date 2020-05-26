@@ -1,0 +1,62 @@
+package ua.nure.filonitch.practice4;
+
+import java.util.ResourceBundle;
+import java.util.Scanner;
+
+public class Part5 {
+
+	private static String trans2Eng(String string) {
+		ResourceBundle resRu = ResourceBundle.getBundle("resources_en");
+		return resRu.getString(string);
+	}
+
+	private static String trans2Rus(String string) {
+		ResourceBundle resEn = ResourceBundle.getBundle("resources_ru");
+		return resEn.getString(string);
+	}
+
+	private static String trans2French(String string) {
+		ResourceBundle resEn = ResourceBundle.getBundle("resources_fr");
+		return resEn.getString(string);
+	}
+
+	public static void main(String[] args) {
+		Scanner scanner = new Scanner(System.in);
+		while (scanner.hasNext()) {
+			String someword = scanner.nextLine();
+			switch (someword) {
+			case "table en":
+				System.out.println(trans2Eng("table"));
+				continue;
+			case "table ru":
+				System.out.println(trans2Rus("table"));
+				continue;
+			case "apple en":
+				System.out.println(trans2Eng("apple"));
+				continue;
+			case "apple ru":
+				System.out.println(trans2Rus("apple"));
+				continue;
+			case "cake en":
+				System.out.println(trans2Eng("cake"));
+				continue;
+			case "cake ru":
+				System.out.println(trans2Rus("cake"));
+				continue;
+			case "table fr":
+				System.out.println(trans2French("table"));
+				continue;
+			case "apple fr":
+				System.out.println(trans2French("apple"));
+				continue;
+			case "cake fr":
+				System.out.println(trans2French("cake"));
+				continue;
+			case "stop":
+				return;
+			default:
+				System.out.println("No such values");
+			}
+		}
+	}
+}

@@ -1,0 +1,89 @@
+package ua.nure.filonitch.practice4;
+
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.security.SecureRandom;
+import java.util.Scanner;
+
+public class Part2 {
+	public static final String FILENAME = "part2.txt";
+	private static final int LENGTH = 10;
+
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+		// String input = Util.readFile("part2.txt");
+		// String output = Util.readFile("part2_sorted.txt");
+		WriteIntoTheFile();
+		ReadFromTheFile();
+		OutputOfDoneInformationFromTheFile();
+		/*
+		 * System.out.println("input ==>" + input); System.out.println("output ==> " +
+		 * output);
+		 */
+	}
+
+	static void WriteIntoTheFile() {
+		// TODO Auto-generated method stub
+		try (FileWriter writer = new FileWriter("part2.txt", false)) {
+			int ind = 0;
+			StringBuilder strbuild = new StringBuilder();
+			SecureRandom num = new SecureRandom();
+			for (int k = 0; k < 10; k++) {
+				int generateNum = num.nextInt(50);
+				if (ind == 0) {
+					strbuild.append(generateNum);
+					ind++;
+				} else {
+					strbuild.append(" " + generateNum);
+				}
+			}
+			writer.write(strbuild.toString());
+			System.out.println("input ==> " + strbuild);
+		} catch (IOException ex) {
+			System.out.println(ex.getMessage());
+		}
+	}
+
+	static void ReadFromTheFile() throws IOException {
+		// TODO Auto-generated method stub
+		FileReader fr = new FileReader("part2.txt");
+		Scanner scann = new Scanner(fr);
+		scann.close();
+	}
+
+	private static void SortElementsOfArray(int[] array) {
+		// TODO Auto-generated method stub
+		for (int k = 0; k < array.length; ++k) {
+			for (int l = 1; l < array.length - k; ++l) {
+				if (array[l - 1] > array[l]) {
+					int temp = array[l - 1];
+					array[l - 1] = array[l];
+					array[l] = temp;
+				}
+			}
+		}
+	}
+
+	private static void OutputOfDoneInformationFromTheFile() throws IOException {
+		// TODO Auto-generated method stub
+		String input = Util.readFile(FILENAME);
+		String[] num = input.split(" ");
+		int[] array = new int[LENGTH];
+		for (int k = 0; k < LENGTH; ++k) {
+			array[k] = Integer.parseInt(num[k]);
+		}
+		SortElementsOfArray(array);
+		BufferedWriter bufOut = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream("part2_sorted.txt"), "UTF-8"));
+		for (int Arr : array) {
+			bufOut.append(String.valueOf(Arr)).append(" ");
+		}
+		bufOut.close();
+		String output = Util.readFile("part2_sorted.txt");
+		System.out.println("output ==> " + output);
+	}
+}

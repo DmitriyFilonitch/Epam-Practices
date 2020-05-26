@@ -1,0 +1,91 @@
+package ua.nure.filonitch.practice6.part4;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class Range implements Iterable<Integer> {
+
+    private int m;
+    private int n;
+    private boolean reverse;
+    
+    Range(int m, int n) {
+        this(m, n, false);
+    }
+
+    Range(int m, int n, boolean reverse) {
+    	this.reverse = !reverse;
+        this.m = m;
+        this.n = n;
+    }
+
+
+    public void output() {
+        Iterator<Integer> it = iterator();
+        while (it.hasNext()) {
+            System.out.print(it.next());
+        }
+    }
+
+    @Override
+    public Iterator<Integer> iterator() {
+        if (reverse) {
+            return new RangeIteratorReverse();
+        }
+        return new RangeIterator();
+    }
+
+    private class RangeIteratorReverse implements Iterator<Integer> {
+        private int pointer;
+
+        RangeIteratorReverse() {
+            pointer = m - 1;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return pointer < n;
+        }
+
+        @Override
+        public Integer next() {
+        	if(!hasNext()){
+        	      throw new NoSuchElementException();
+        	    }
+            return ++pointer;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    private class RangeIterator implements Iterator<Integer> {
+        private int pointer;
+
+        RangeIterator() {
+            pointer = n + 1;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return pointer > m;
+        }
+
+        @Override
+        public Integer next() {
+        	if(!hasNext()){
+        	      throw new NoSuchElementException();
+        	    }
+            return --pointer;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+    }
+
+}

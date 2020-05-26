@@ -1,0 +1,32 @@
+package ua.nure.filonitch.practice4;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Part1 {
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		String input = Util.readFile("part1.txt");
+		System.out.println("REVERSED: \n\n" + convert2Upper(input));
+	}
+
+	public static String convert2Upper(String inp) {
+		// TODO Auto-generated method stub
+		final String regex = "\\w{4,}";
+		Pattern patt= Pattern.compile(regex, Pattern.UNICODE_CHARACTER_CLASS);
+		Matcher matcher = patt.matcher(inp);
+		while (matcher.find()) {
+		//	str = reverse(matcher.group());
+			inp = inp.replace(matcher.group(), matcher.group().toUpperCase());
+		}
+		return inp;
+	}
+
+/*	private static String reverse(String word) {
+        // TODO Auto-generated method stub
+		StringBuilder builder = new StringBuilder();
+		String sb = builder.append(word).reverse().toString();
+		builder = null;
+		return sb;
+	}*/
+}
